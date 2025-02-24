@@ -1,0 +1,81 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>日程安排</title> 		
+{/block}
+
+{block name="style"}
+	<style type="text/css">
+		.mbui-bar .mbui-bar-item:nth-child(1){color: var(--color-blue-600);}
+		.calendar-box-title{padding:12px; background-color:var(--color-gray-100)}
+		.calendar-item {display: flex;align-items: center;padding: 10px;}		  
+		.calendar-item-time {width:50px; text-align:right; font-size:12px; padding-right:10px; border-right:2px solid var(--color-blue-600)}		  
+		.calendar-item-title {text-align: left; padding-left:10px;}
+	</style>
+{/block}
+
+{block name="body"}
+<div id="calendar"></div>
+<div class="calendar-box bg-white">
+	<div class="calendar-box-title border-bottom" id="calendarDay"></div>
+	<div id="calendarBox" style="display:none;"></div>
+</div>
+<div class="mbui-new-add"><a href="/qiye/index/calendar_add" title="新增工作记录" data-event="menu"><i class="iconfont icon-addnew"></i></a></div>
+{/block}
+
+{block name="script"}	
+	<script type="text/javascript">			
+		const moduleInit = ['layer','calendar'];
+		function mbuiInit() {
+			let tool = mbui.tool,calendar=mbui.calendar;	
+			calendar("calendar",{
+				mode: "month",
+				maxEvent: 1,
+				showModeBtn: false,
+				success:function(today){
+					var year = today.getFullYear();
+					var month = today.getMonth() + 1;
+					var date = today.getDate();
+					tool.post('/qiye/index/events',{day:year+'-'+month+'-'+date},function(res){
+						$('#calendarDay').html(res.msg);
+						if(res.data.length>0){
+							let item='';
+							for(let i=0;i<res.data.length;i++){
+								item+='<div class="calendar-item border-bottom"><div class="calendar-item-time">'+res.data[i].show+'</div><div class="calendar-item-title">'+res.data[i].title+'</div></div>';
+							}
+							$('#calendarBox').show().html(item);
+						}
+						else{
+							$('#calendarBox').hide();
+						}
+					})
+				},
+				mark:function(start_date,end_date){
+					tool.post('/qiye/index/calendar',{start_date:start_date,end_date:end_date},function(res){
+						if(res.data.length>0){
+							for(let i=0;i<res.data.length;i++){
+								let title=res.data[i].title;
+								$('#calendar').find('[title="'+title+'"]').find('.calendar-value').append('<div class="calendar-event"></div>');
+							}
+						}
+					})
+				},
+				cellClick: function (day) {
+					tool.post('/qiye/index/events',{day:day},function(res){
+						$('#calendarDay').html(res.msg);
+						if(res.data.length>0){
+							let item='';
+							for(let i=0;i<res.data.length;i++){
+								item+='<div class="calendar-item border-bottom"><div class="calendar-item-time">'+res.data[i].show+'</div><div class="calendar-item-title">'+res.data[i].title+'</div></div>';
+							}
+							$('#calendarBox').show().html(item);
+						}
+						else{
+							$('#calendarBox').hide();
+						}
+					})
+				}
+			})
+	}
+	</script>
+{/block}

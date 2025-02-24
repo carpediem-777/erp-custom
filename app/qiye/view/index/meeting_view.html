@@ -1,0 +1,93 @@
+{extend name="/base/mobile_base" /}
+{block name="title"}
+	<title>会议纪要详细</title>		
+{/block}
+{block name="style"}
+<style>
+
+</style>
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="mbui-group">
+	<div class="mbui-list">
+		<div class="mbui-list-bd">会议时间</div>
+		<div class="mbui-list-ft">{$detail.meeting_date|date='Y-m-d H:i'}</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">主持人</div>
+		<div class="mbui-list-ft">{$detail.anchor_name}</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">会议室</div>
+		<div class="mbui-list-ft">{$detail.room}</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">记录人</div>
+		<div class="mbui-list-ft">{$detail.recorder_name}</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">主办部门</div>
+		<div class="mbui-list-ft">{$detail.did_name|default=""}</div>
+    </div>
+</div>
+
+<div class="padding-12 margin-12-t bg-white f16">
+	<div><strong>会议主题</strong></div>
+	<div class="padding-12-t">{$detail.title}</div>
+</div>
+
+<div class="padding-12 margin-12-t bg-white f16">
+	<div><strong>参会人员</strong></div>
+	<div class="padding-12-t">{$detail.join_names}</div>
+</div>
+
+<div class="padding-12 margin-12-t bg-white f16">
+	<div><strong>会议内容</strong></div>
+	<div class="padding-12-t">{:nl2br($detail.content)}</div>
+</div>
+
+<div class="padding-12 margin-12-t bg-white f16">
+	<div><strong>下一步工作计划</strong></div>
+	<div class="padding-12-t">{:nl2br($detail.plans)}</div>
+</div>
+
+<div class="padding-12 margin-12-t bg-white f16">
+	<div><strong>参会人员签字</strong></div>
+	<div class="padding-12-t">{$detail.sign_names}</div>
+</div>
+
+<div class="padding-12 margin-12-t bg-white f16">
+	<div><strong>共享给谁</strong></div>
+	<div class="padding-12-t">{$detail.share_names|default='-'}</div>
+</div>
+
+<div class="padding-12 margin-12-t bg-white f16">
+	<div><strong>备注信息</strong></div>
+	<div class="padding-12-t">{$detail.remarks|default='-'}</div>
+</div>
+
+{notempty name="$detail.file_array"}
+<div class="mbui-group-title">相关附件</div>
+<div class="bg-white">
+	<div class="mbui-file-list" style="padding:12px 12px 2px;">
+	{volist name="$detail.file_array" id="vo"}
+		{:file_item($vo,'view')}
+	{/volist}
+	</div>
+</div>
+{/notempty}
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">
+		const moduleInit = ['layer','fixedbar','fileupload'];
+		function mbuiInit() {
+			let tool = mbui.tool,layer=mbui.layer;
+
+		}
+	</script>
+{/block}
+<!-- /脚本 -->

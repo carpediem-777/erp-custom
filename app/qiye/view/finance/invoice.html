@@ -1,0 +1,71 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>发票列表</title> 		
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="mbui-tab">
+	<ul class="mbui-tab-title">
+		<li {eq name="$tab" value="1"} class="active" {/eq}>
+			<a class="link-a" href="javascript:;" data-href="/qiye/finance/invoice?tab=1">我申请的</a>
+		</li>
+		<li {eq name="$tab" value="2"} class="active" {/eq}>
+			<a class="link-a" href="javascript:;" data-href="/qiye/finance/invoice?tab=2">待我审核</a>
+		</li>
+		<li {eq name="$tab" value="3"} class="active" {/eq}>
+			 <a class="link-a" href="javascript:;" data-href="/qiye/finance/invoice?tab=3">我已审核</a>
+		</li>
+		<li {eq name="$tab" value="4"} class="active" {/eq}>
+			 <a class="link-a" href="javascript:;" data-href="/qiye/finance/invoice?tab=4">抄送我的</a>
+		</li>
+	</ul>
+</div>
+<div id="listBox" class="load-data-list"></div>
+<div class="mbui-new-add"><a href="/finance/invoice/add" title="新增发票" data-event="menu"><i class="iconfont icon-addnew"></i></a></div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">
+		const tab = {$tab};
+		const moduleInit = ['tool','loadData'];
+		function mbuiInit() {
+			let tool = mbui.tool,loadData=mbui.loadData;
+			loadData({
+				url:'/qiye/finance/invoice',
+				where:{tab:tab},
+				template:function(data){
+					let pay_status='';
+					let code='';
+					if(data.check_status==2){
+						pay_status = '<span class="mbui-text-red">未开票</span>';
+						if(data.open_status==1){
+							pay_status = '<span class="mbui-text-green">已开票</span>';
+							code = data.code;
+						}
+						else if(data.open_status==2){
+							pay_status = '<span class="mbui-text-black">已作废</span>';
+							code = data.code;
+						}
+					}
+					else{
+						pay_status='-';
+						code='-';
+					}
+				
+					var listItem = '<a href="/finance/invoice/view/id/'+data.id+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="f16">发票金额：'+data.amount+'</dt>\
+									<dd class="f13"><span class="load-data-span"><i>审批状态：</i><span class="check-status-color-'+data.check_status+'">'+data.check_status_str+'</span></span><span class="load-data-span"><i>申请人：</i>'+data.admin_name+'</span><span class="load-data-span"><i>部门：</i>'+data.department+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>开票抬头：</i>'+data.invoice_title+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>开票状态：</i>'+pay_status+'</span><span class="load-data-span"><i>发票号码：</i>'+code+'</span></dd>\
+								</dl>\
+							</a>';
+					return listItem;
+				}	
+			});
+		}
+	</script>
+{/block}

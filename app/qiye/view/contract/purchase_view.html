@@ -1,0 +1,181 @@
+{extend name="/base/mobile_base" /}
+{block name="title"}
+	<title>采购合同详细</title>		
+{/block}
+{block name="style"}
+<style>
+.contract-header h1{padding-bottom:8px;}
+</style>
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="padding-12 margin-12-b bg-white contract-header">
+	<h1>{$detail.name}</h1>
+	<p><span class="text-gray f12">合同编号：{$detail.code}，{$detail.admin_name}创建于{:time_trans($detail.create_time)}</p>
+</div>
+<div class="mbui-group">
+	<div class="mbui-list">
+		<div class="mbui-list-bd">合同金额(元)</div>
+		<div class="mbui-list-ft">{$detail.cost}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">合同类别</div>
+		<div class="mbui-list-ft">{$detail.cate_title}</div>
+	</div>	
+	<div class="mbui-list">
+		<div class="mbui-list-bd">合同性质</div>
+		<div class="mbui-list-ft">{$detail.types_name}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">签约主体(甲方)</div>
+		<div class="mbui-list-ft">{$detail.subject_title}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">合同始止日期</div>
+		<div class="mbui-list-ft">{$detail.start_time} 至 {$detail.end_time}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">供应商名称(乙方)</div>
+		<div class="mbui-list-ft">{$detail.supplier}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">签约供应商代表</div>
+		<div class="mbui-list-ft">{$detail.contact_name}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">供应商联系电话</div>
+		<div class="mbui-list-ft">{$detail.contact_mobile|default='-'}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">供应商联系地址</div>
+		<div class="mbui-list-ft">{$detail.contact_address|default='-'}</div>
+	</div>
+	{notempty name="$detail.remark"}
+	<div class="mbui-list">
+		<div class="mbui-list-bd">备注信息</div>
+		<div class="mbui-list-ft">{$detail.remark}</div>
+	</div>
+	{/notempty}
+</div>
+	
+<div class="mbui-group-title">签订信息</div>
+<div class="mbui-group">
+	<div class="mbui-list">
+		<div class="mbui-list-bd">签订人</div>
+		<div class="mbui-list-ft">{$detail.sign_name}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">所属部门</div>
+		<div class="mbui-list-ft">{$detail.sign_department}</div>
+	</div>		
+	<div class="mbui-list">
+		<div class="mbui-list-bd">签订日期</div>
+		<div class="mbui-list-ft">{$detail.sign_time}</div>
+	</div>		
+	<div class="mbui-list">
+		<div class="mbui-list-bd">合同制定人</div>
+		<div class="mbui-list-ft">{$detail.prepared_name|default='-'}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">合同保管人</div>
+		<div class="mbui-list-ft">{$detail.keeper_name|default='-'}</div>
+	</div>	
+	<div class="mbui-list">
+		<div class="mbui-list-bd">合同共享人</div>
+		<div class="mbui-list-ft">{$detail.share_names|default='-'}</div>
+	</div>
+</div>
+	
+{eq name="$detail.types" value="2"}{include file="/contract/view_purchased"}{/eq}		
+{eq name="$detail.types" value="3"}{include file="/contract/view_services"}{/eq}	
+	
+<div class="mbui-group-title">合同情况</div>
+<div class="mbui-group">
+	<div class="mbui-list">
+		<div class="mbui-list-bd">录入人</div>
+		<div class="mbui-list-ft">{$detail.admin_name}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">录入时间</div>
+		<div class="mbui-list-ft">{$detail.create_time}</div>
+	</div>
+	{gt name="$detail.archive_time" value="0"}
+	<div class="mbui-list">
+		<div class="mbui-list-bd">归档状态</div>
+		<div class="mbui-list-ft mbui-text-red">已归档</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">归档人</div>
+		<div class="mbui-list-ft">{$detail.archive_name}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">归档时间</div>
+		<div class="mbui-list-ft">{$detail.archive_time|date='Y-m-d H:i:s'}</div>
+	</div>
+	{else/}
+		<div class="mbui-list">
+		<div class="mbui-list-bd">归档状态</div>
+		<div class="mbui-list-ft mbui-text-green">未归档</div>
+	</div>
+	{/gt}
+	
+	{gt name="$detail.stop_time" value="0"}
+	<div class="mbui-list">
+		<div class="mbui-list-bd">中止人</div>
+		<div class="mbui-list-ft">{$detail.stop_name}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">中止时间</div>
+		<div class="mbui-list-ft">{$detail.stop_time|date='Y-m-d H:i:s'}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">中止备注</div>
+		<div class="mbui-list-ft">{$detail.stop_remark|default='-'}</div>
+	</div>
+	{/gt}
+	
+	{gt name="$detail.void_time" value="0"}
+	<div class="mbui-list">
+		<div class="mbui-list-bd">作废人</div>
+		<div class="mbui-list-ft">{$detail.void_name}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">作废时间</div>
+		<div class="mbui-list-ft">{$detail.void_time|date='Y-m-d H:i:s'}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">作废备注</div>
+		<div class="mbui-list-ft">{$detail.void_remark|default='-'}</div>
+	</div>
+	{/gt}
+</div>			
+{notempty name="$detail.file_array"}
+<div class="mbui-group-title">相关附件</div>
+<div class="bg-white">
+	<div class="mbui-file-list" style="padding:12px 12px 2px;">
+	{volist name="$detail.file_array" id="vo"}
+		{:file_item($vo,'view')}
+	{/volist}
+	</div>
+</div>
+{/notempty}
+
+<div id="checkBox" data-status="{$detail.check_status}" data-id="{$detail.id}" data-checkflowid="{$detail.check_flow_id}"></div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}
+	<script type="text/javascript">			
+		const detail_id = {$detail.id};
+		const moduleInit = ['layer','fixedbar','oaCheck','fileupload'];
+		function mbuiInit() {
+			let tool = mbui.tool,layer = mbui.layer,oaCheck=mbui.oaCheck;
+			//审批相关
+			oaCheck.init({
+				check_name:'purchase',
+			});			
+		}
+	</script>
+{/block}
+<!-- /脚本 -->

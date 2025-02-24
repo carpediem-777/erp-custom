@@ -1,0 +1,119 @@
+{extend name="/base/mobile_base" /}
+{block name="title"}
+	<title>无发票付款详情</title>		
+{/block}
+{block name="style"}
+<style>
+.user-name{line-height:26px;}
+.user-ops{font-size:14px; color:#999;}
+</style>
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="mbui-user-panel margin-16-b">
+	<div class="avatar">
+		<img src="{$create_user.thumb|default=''}" alt="{$create_user.name|default=''}">
+	</div>
+	<div class="panel-info">
+		<div class="user-name">{$create_user.name|default=''}的无发票付款</div>
+		<div class="user-ops">部门：{$create_user.department|default=''}，职称：{$create_user.position|default=''}</div>
+	</div>
+</div>
+<div class="mbui-group">
+	<div class="mbui-list">
+		<div class="mbui-list-bd">预付款金额(元)</div>
+		<div class="mbui-list-ft">{$detail.amount}</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">付款方</div>
+		<div class="mbui-list-ft">
+			{$detail.subject}
+		</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">收款方(供应商)</div>
+		<div class="mbui-list-ft">
+			{$detail.supplier_name}
+		</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">付款类型</div>
+		<div class="mbui-list-ft">
+			{eq name="$detail.cash_type" value="1"}银行{/eq}
+			{eq name="$detail.cash_type" value="2"}现金{/eq}
+			{eq name="$detail.cash_type" value="3"}支付宝{/eq}
+			{eq name="$detail.cash_type" value="4"}微信{/eq}
+			{eq name="$detail.cash_type" value="5"}汇票{/eq}
+			{eq name="$detail.cash_type" value="6"}支票{/eq}
+			{eq name="$detail.cash_type" value="7"}托收{/eq}
+			{eq name="$detail.cash_type" value="8"}其他{/eq}
+		</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">银行类别</div>
+		<div class="mbui-list-ft">
+			{$detail.invoice_banking}
+		</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">开户行</div>
+		<div class="mbui-list-ft">
+			{$detail.invoice_bank}
+		</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">银行账号</div>
+		<div class="mbui-list-ft">
+			{$detail.invoice_account}
+		</div>
+    </div>
+	{if condition="$detail.purchase_id > 0"}
+	<div class="mbui-list">
+		<div class="mbui-list-bd">关联采购合同</div>
+		<div class="mbui-list-ft">{$detail.purchase_name}</div>
+    </div>
+	{/if}
+	{if condition="$detail.project_id > 0"}
+	<div class="mbui-list">
+		<div class="mbui-list-bd">关联项目</div>
+		<div class="mbui-list-ft">{$detail.project_name}</div>
+    </div>
+	{/if}
+	{notempty name="$detail.remark"}
+	<div class="mbui-list">
+		<div class="mbui-list-bd">备注信息</div>
+		<div class="mbui-list-ft">{$detail.remark}</div>
+    </div>
+	{/notempty}
+</div>
+{notempty name="$detail.file_array"}
+<div class="mbui-group-title">相关附件</div>
+<div class="bg-white">
+	<div class="mbui-file-list" style="padding:12px 12px 2px;">
+	{volist name="$detail.file_array" id="vo"}
+		{:file_item($vo,'view')}
+	{/volist}
+	</div>
+</div>
+{/notempty}
+
+<div id="checkBox" data-status="{$detail.check_status}" data-id="{$detail.id}" data-checkflowid="{$detail.check_flow_id}"></div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">			
+		const moduleInit = ['layer','fixedbar','oaCheck','fileupload'];
+		const id = {$detail.id};
+		function mbuiInit() {
+			let tool = mbui.tool,layer=mbui.layer,oaCheck=mbui.oaCheck;
+			//审批相关
+			oaCheck.init({
+				check_name:'ticketa',
+				checking_btn:'<button class="mbui-btn bg-green link-a" data-href="/finance/ticket/add_a/id/'+id+'.html">编辑</button>'
+			});
+		}
+	</script>
+{/block}
+<!-- /脚本 -->

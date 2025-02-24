@@ -1,0 +1,87 @@
+{extend name="/base/mobile_base" /}
+{block name="title"}
+	<title>工作汇报详细</title>		
+{/block}
+{block name="style"}
+<style>
+
+</style>
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="mbui-group">
+	<div class="mbui-list">
+		<div class="mbui-list-bd">汇报类型</div>
+		<div class="mbui-list-ft">
+			{eq name="$detail.types" value="1"}<span class="green">日报</span>{/eq}
+			{eq name="$detail.types" value="2"}<span class="blue">周报</span>{/eq}
+			{eq name="$detail.types" value="3"}<span class="yellow">月报</span>{/eq}
+		</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">汇报周期</div>
+		<div class="mbui-list-ft">{$detail.range_date}</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">汇报人</div>
+		<div class="mbui-list-ft">{$detail.person_name}</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">接收人</div>
+		<div class="mbui-list-ft">{$detail.users}</div>
+    </div>
+	<div class="mbui-list">
+		{eq name="$detail.send_time" value="0"}
+		<div class="mbui-list-bd">汇报状态</div>
+		<div class="mbui-list-ft"><span class="red">未汇报</span></div>
+		{else/}
+		<div class="mbui-list-bd">汇报时间</div>
+		<div class="mbui-list-ft">{$detail.send_time}</div>		
+		{/eq}
+    </div>
+</div>
+
+<div class="padding-12 margin-12-t bg-white f16">
+	<div><strong>工作内容</strong></div>
+	<div class="padding-12-t">{:nl2br($detail.works)}</div>
+</div>
+
+<div class="padding-12 margin-12-t bg-white f16">
+	<div><strong>工作计划</strong></div>
+	<div class="padding-12-t">{:nl2br($detail.plans)}</div>
+</div>
+	
+<div class="padding-12 margin-12-t bg-white f16">
+	<div><strong>其他事项</strong></div>
+	<div class="padding-12-t">{:nl2br($detail.remark)}</div>
+</div>
+	
+{notempty name="$detail.file_array"}
+<div class="mbui-group-title">相关附件</div>
+<div class="bg-white">
+	<div class="mbui-file-list" style="padding:12px 12px 2px;">
+	{volist name="$detail.file_array" id="vo"}
+		{:file_item($vo,'view')}
+	{/volist}
+	</div>
+</div>
+{/notempty}
+{notempty name="$detail.read_users"}
+<div class="padding-12 margin-12-t bg-white f16">
+	<div><strong>已读回执</strong></div>
+	<div class="padding-12-t">{$detail.read_users}</div>
+</div>
+{/notempty}
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">			
+		const moduleInit = ['layer','fixedbar','fileupload'];
+		function mbuiInit() {
+			let tool = mbui.tool,layer=mbui.layer;
+		}
+	</script>
+{/block}
+<!-- /脚本 -->

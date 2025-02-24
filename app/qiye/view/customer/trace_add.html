@@ -1,0 +1,123 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>销售机会</title> 		
+{/block}
+
+{block name="style"}
+	<style type="text/css">
+	
+	</style>
+{/block}
+
+{block name="body"}
+<form class="mbui-form" id="formBox">
+	<div class="mbui-group-title" style="padding-top:12px">跟进记录</div>
+	<div class="mbui-group">		
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">联系人<i>*</i></label>
+			<div class="mbui-form-select">
+				<select name="contact_id"  data-verify="required" data-errortips="请完善联系人">
+					<option value="">--请选择--</option>
+					{volist name=":customer_contact($customer_id)" id="v"}
+					<option value="{$v.id}">{$v.name}</option>
+					{/volist}
+				</select>
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">跟进方式<i>*</i></label>
+			<div class="mbui-form-select">
+				<select name="types"  data-verify="required" data-errortips="请完善跟进方式">
+					<option value="">--请选择--</option>
+					{volist name=":get_base_type_data('basic_customer',3)" id="v"}
+					<option value="{$v.id}">{$v.title}</option>
+					{/volist}
+				</select>
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">跟进时间<i>*</i></label>
+			<div class="mbui-form-select date-select">
+				<input class="mbui-form-input tool-time" name="follow_time" readonly type="text" data-type="datetime" placeholder="请选择" value="" data-verify="required" data-errortips="请完善跟进时间">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">沟通内容<i>*</i></label>
+			<textarea rows="5" name="content" class="mbui-form-input" placeholder="请输入" data-verify="required" data-errortips="请输入沟通内容"></textarea>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">当前阶段<i>*</i></label>
+			<div class="mbui-form-select">
+				<select name="stage"  data-verify="required" data-errortips="请完当前阶段">
+					<option value="">--请选择--</option>
+					{volist name=":get_base_type_data('basic_customer',4)" id="v"}
+					<option value="{$v.id}">{$v.title}</option>
+					{/volist}
+				</select>
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">销售机会</label>
+			<div class="mbui-form-select">
+				<select name="grade_id">
+					<option value="">--请选择--</option>
+					{volist name=":customer_chance($customer_id)" id="v"}
+					<option value="{$v.id}">{$v.title}</option>
+					{/volist}
+				</select>
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">下次沟通时间<i>*</i></label>
+			<div class="mbui-form-select date-select">
+				<input class="mbui-form-input tool-time" name="next_time" data-type="datetime" readonly type="text" placeholder="请选择" value="" data-verify="required" data-errortips="请完善预计签单时间">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">相关附件</label>
+			<div class="mbui-form-uploader">
+				<div class="mbui-uploader-btn-border" id="uploadBtn"><i class="iconfont icon-shangchuan"></i></div>
+			</div>
+			<div id="uploadBox" class="mbui-file-list" style="padding:0 12px 2px;">
+				<input data-type="file" name="file_ids" type="hidden" value="{$detail.file_ids|default=''}">
+				{notempty name="$detail.file_array"}				
+				{volist name="$detail.file_array" id="vo"}
+					{:file_item($vo)}
+				{/volist}
+				{/notempty}
+			</div>
+		</div>
+	</div>
+	<div class="padding-16 center">
+		<input type="hidden" name="cid" value="{$customer_id}">
+		<button class="mbui-btn mbui-btn-100" data-event="submit">提交保存</button>
+	</div>
+</form>
+	
+{/block}
+
+{block name="script"}	
+	<script type="text/javascript">			
+		const moduleInit = ['tool','form','layer','picker','fileupload'];
+		function mbuiInit() {
+			let tool = mbui.tool,form= mbui.form,layer=mbui.layer,fileupload=mbui.fileupload;
+
+			//附件上传
+			fileupload();
+			
+			form({
+				submit:function(data){
+					let callback = function (e) {
+						layer.msg(e.msg);
+						if (e.code == 0) {
+							tool.replace('/customer/customer/view/id/{$customer_id}.html',1000);
+						}
+					}
+					tool.post("/customer/trace/add", data, callback);
+					return false;
+				}
+			});		
+		}
+	</script>
+{/block}

@@ -1,0 +1,219 @@
+{extend name="/base/mobile_base" /}
+{block name="title"}
+	<title>任务详细</title>		
+{/block}
+{block name="style"}
+<style>
+.task-header h1{padding:8px 0;}
+.text-content img{max-width:100%; height:auto;}
+</style>
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="task-header padding-12 margin-12-b bg-white ">
+	<div class="justify-between f14">
+		<div>
+			<span class="text-gray">状态：</span><span class="check-status-color-{$detail.status}">{$detail.status_name}</span>，
+			<span class="text-gray">优先级：</span><span class="check-status-color-{$detail.priority}" id="edit_priority" data-types="radio" data-array="priority" data-text="{$detail.priority}">{$detail.priority_name}</span>
+		</div>
+		<div>
+			<span class="text-gray" id="edit_director_uid" data-types="adminpicker" data-text="{$detail.director_uid}">负责人：</span>{$detail.director_name|default=''}
+		</div>
+	</div>
+	<h1 id="edit_title" data-types="text">{$detail.title}</h1>
+	{gt name="$detail.project_id" value="0"}
+	<p class="f14"><span class="text-gray">关联项目：</span>{$detail.project_name|default='-'}</p>
+	{/gt}
+</div>
+
+<div class="mbui-group">
+	<div class="mbui-list">
+		<div class="mbui-list-bd">协作人员</div>
+		<div class="mbui-list-ft" id="edit_assist_admin_ids" data-types="adminpicker" data-min="2" data-text="{$detail.assist_admin_ids}">{$detail.assist_admin_names|default=''}</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">工作类型</div>
+		<div class="mbui-list-ft" id="edit_work_id" data-types="picker" data-min="1" data-text="{$detail.work_id}" data-api="/api/index/get_work_cate">{$detail.cate_name|default=''}</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">完成进度</div>
+		<div class="mbui-list-ft" id="edit_done_ratio" data-types="num" data-text="{$detail.done_ratio}" data-min="0" data-max="100">{$detail.done_ratio|default=0}%</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">估计结束日期</div>
+		<div class="mbui-list-ft" id="edit_end_time" data-types="oadate" data-text="{$detail.end_time}">{$detail.end_time|date='Y-m-d'}</span>{gt name="$detail.delay" value="0"}<span class="red">『逾期 {$detail.delay}天』</span>{/gt}</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">实际完成日期</div>
+		<div class="mbui-list-ft">{eq name="$detail.over_time" value="0"}-{else/}{$detail.over_time|date='Y-m-d'}{/eq}</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">估计工时</div>
+		<div class="mbui-list-ft" id="edit_plan_hours" data-types="num" data-text="{$detail.plan_hours}" data-min="0">{$detail.plan_hours|default=''}</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">实际工时</div>
+		<div class="mbui-list-ft">{eq name="$detail.work_hours" value="0"}-{else/}{$detail.work_hours}{/eq}</div>
+    </div>
+	<div class="mbui-form-line">
+		<label class="mbui-form-label">相关附件</label>
+		<div class="mbui-form-uploader">
+			<div class="mbui-uploader-btn-border" id="uploadBtn"><i class="iconfont icon-shangchuan"></i></div>
+		</div>
+		<div id="uploadBox" class="mbui-file-list" style="padding:0 12px 2px;">
+			<input data-type="file" name="file_ids" type="hidden" value="{$detail.file_ids|default=''}">
+			{notempty name="$file_array"}				
+			{volist name="$file_array" id="vo"}
+				{:file_item($vo)}
+			{/volist}
+			{/notempty}
+		</div>
+	</div>
+</div>
+
+<div class="padding-12 margin-12-tb bg-white f16">
+	<strong>详细描述</strong>
+	<div class="padding-12-t">{$detail.content|raw}</div>
+</div>
+
+<div class="mbui-tab margin-top;" style="padding-bottom:60px" id="tabs">
+	<ul class="mbui-tab-title">
+		<li class="active"><a href="javascript:;">工作记录</a></li>
+		<li><a href="javascript:;">员工评论</a></li>
+	</ul>
+	<div class="mbui-tab-content">
+		<div class="mbui-tab-item mbui-tab-show">
+			<div id="scheduleBox" class="load-data-list"></div>
+		</div>
+		<div class="mbui-tab-item">
+			<div id="commentBox"></div>
+		</div>
+	 </div>
+</div>
+
+<footer class="mbui-bar bar-fixed" id="editBox">
+    <span class="mbui-bar-item click-edit" data-types="radio" data-field="status" data-array="status" data-text="{$detail.status}">
+        <span class="mbui-bar-icon"><i class="iconfont icon-xinxidaoru"></i></span>
+        <span>流转状态</span>
+    </span>
+    <span class="mbui-bar-item click-comment">
+        <span class="mbui-bar-icon">
+			<i class="iconfont icon-tongzhi"></i>
+		</span>
+        <span>发表评论</span>
+    </span>
+    <span class="mbui-bar-item click-edit" data-types="menu" data-array="task">
+        <span class="mbui-bar-icon"><i class="iconfont icon-gongdanguanli"></i></span>
+        <span>编辑操作</span>
+    </span>
+	<a href="/qiye/index/schedule_add?task_id={$detail.id}" class="mbui-bar-item">
+        <span class="mbui-bar-icon"><i class="iconfont icon-xinzeng"></i></span>
+        <span>工作记录</span>
+    </a>
+</footer>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">	
+		const task_id = {$detail.id};
+		const status_array = [{"id":1,"title":"未开始"},{"id":2,"title":"进行中"},{"id":3,"title":"已完成"},{"id":4,"title":"已拒绝"},{"id":5,"title":"已关闭"}];
+		const priority_array = [{"id":1,"title":"低"},{"id":2,"title":"中"},{"id":3,"title":"高"},{"id":4,"title":"紧急"}];
+		const task_menu = [
+			{"field":"title","title":"编辑任务主题"},
+			{"field":"priority","title":"设置优先级"},
+			{"field":"director_uid","title":"更换负责人"},
+			{"field":"assist_admin_ids","title":"更换协作人"},
+			{"field":"work_id","title":"更换工作类型"},
+			{"field":"done_ratio","title":"设置完成进度"},
+			{"field":"end_time","title":"修改估计结束日期"},
+			{"field":"plan_hours","title":"修改估计工作量"}
+		];
+		const moduleInit = ['layer','fixedbar','loadData','tab','oaEdit','fileupload','oaComment'];
+		function mbuiInit() {
+			let tool = mbui.tool,loadData = mbui.loadData,layer = mbui.layer,tab = mbui.tab,oaEdit = mbui.oaEdit,fileupload=mbui.fileupload,comment=mbui.oaComment;
+			
+			//附件上传
+			fileupload({
+				ajaxUpload:function(res){
+					tool.post('/project/api/add_file',{'topic_id':task_id,'file_id':res.data.id,'file_name': res.data.name, 'module': 'task'},function(e){
+						layer.msg(e.msg);
+						if(e.code==0){
+							setTimeout(function(){
+								location.reload();
+							},1000)
+						}
+					});
+				}
+			});
+			
+			//快捷编辑
+			oaEdit.init({
+				box:'editBox',
+				id:task_id,
+				url: "/project/task/add",
+				radio:{
+					status:status_array,
+					priority:priority_array
+				},
+				menu:{
+					task:task_menu,
+				}
+			});
+		
+			tab({
+				elem: '#tabs',
+				trigger: 'click',
+				ontab: function(index,elem) {
+				
+				}
+			});
+			
+			comment.load('commentBox','task',task_id);
+			
+			$('.click-comment').on('click', function () {
+				comment.textarea(0,task_id,'task','','','',0);
+			})
+			
+			//回复
+			$('#commentBox').on('click', '[data-event="replay"]', function () {
+				let pid = $(this).data('id');
+				let to_uids = $(this).data('uid');
+				let to_unames = $(this).data('unames');
+				comment.textarea(0,task_id,'task','',to_uids,to_unames,pid);
+			})
+			//编辑
+			$('#commentBox').on('click', '[data-event="edit"]', function () {
+				let id = $(this).data('id');
+				let content = $('#comment_' + id).data('content');
+				comment.textarea(id,task_id,'task',content,'','',0);
+			})
+			
+			//删除
+			$('#commentBox').on('click', '[data-event="del"]', function () {
+				let id = $(this).data('id');
+				comment.del(id);
+			})
+			
+			loadData({
+				url:'/oa/api/get_schedule',
+				where:{task_id:task_id},
+				elem:'#scheduleBox',
+				limit:100,
+				template:function(data){
+					var listItem = '<a href="/oa/schedule/view/id/'+data.id+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="f16">'+data.title+'</dt>\
+									<dd class="f13"><span class="load-data-span"><i>记录时间：</i>'+data.create_time+'</span><span class="load-data-span"><i>执行人：</i>'+data.name+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>工作时间：</i>'+data.start_time+' 至 '+data.end_time+'</span><span class="load-data-span"><i>工时：</i>'+data.labor_time+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>工作类型：</i>'+data.labor_type_string+'</span><span class="load-data-span"><i>工作类别：</i>'+data.work_cate+'</span></dd>\
+								</dl>\
+							</a>';
+					return listItem;
+				}	
+			});
+		}
+	</script>
+{/block}
+<!-- /脚本 -->

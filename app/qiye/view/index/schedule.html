@@ -1,0 +1,35 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>工作记录</title> 		
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="note-channel">
+	<div id="listBox" class="load-data-list"></div>
+</div>
+<div class="mbui-new-add"><a href="/qiye/index/schedule_add" title="新增工作记录" data-event="menu"><i class="iconfont icon-addnew"></i></a></div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">			
+		const moduleInit = ['tool','loadData'];
+		function mbuiInit() {
+			let tool = mbui.tool,loadData=mbui.loadData;
+			loadData({
+				url:'/oa/schedule/datalist',
+				template:function(data){
+					return '<a href="/oa/schedule/view/id/'+data.id+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="note-title f16">'+data.create_time+' 工作记录</dt>\
+									<dd class="note-desc f13"><span class="text-gray">工作类型：</span>'+data.labor_type_string+'<span class="text-gray" style="margin-left:16px;">工作类别：</span>'+data.work_cate+'</dd>\
+									<dd class="note-desc f13"><span class="text-gray">工作时间：</span>'+data.start_time+' 至 '+data.end_time_b+'，共 '+data.labor_time+' 工时</dd>\
+								</dl>\
+							</a>';
+				}	
+			});
+		}
+	</script>
+{/block}

@@ -1,0 +1,324 @@
+{extend name="/base/mobile_base" /}
+{block name="title"}
+	<title>项目详细</title>		
+{/block}
+{block name="style"}
+<style>
+.project-header h1{padding-bottom:8px;}
+
+.flow-flex-row {box-direction: row;
+	box-orient: horizontal;
+    -webkit-box-orient: horizontal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+}
+.flow-flexbox { width: 100%;text-align: left;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    display: -webkit-flex;
+    box-align: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+	flex-wrap: wrap;
+}
+.check-item{width: auto; -ms-flex-negative: 0; flex-shrink: 0; padding:1px 0;}
+.check-item i{font-size:20px; margin-right:3px;}
+.check-item span{color:#999;margin:0 1px;}
+.check-item-status{color:#969696; font-size:12px; margin-left:3px;}
+
+.check-items{overflow-x: auto; padding: 2px 0;}
+.check-item strong{margin-right:3px; font-size:16px;}
+.check-item strong.text-blue,.check-item strong.text-green{display:none;}
+.check-item.text-blue strong.text-black,.check-item.text-green strong.text-black{display:none;}
+.check-item.text-blue strong.text-blue{display:block;}
+.check-item.text-green strong.text-green{display:block;}
+</style>
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="padding-12 margin-12-b bg-white project-header">
+	<h1 id="edit_name" data-types="text">{$detail.name}</h1>
+	<p><span class="text-gray f12">{$detail.admin_name} 创建于{$detail.create_time}<span>{gt name="$detail.update_time" value="0"}，最近更新于 {$detail.update_time}{/gt}</span></p>
+</div>
+<div class="mbui-tab margin-top" id="tabs" style="padding-bottom:72px;">
+	<ul class="mbui-tab-title">
+		<li class="active"><a href="javascript:;">项目概览</a></li>
+		<li><a href="javascript:;">项目任务</a></li>
+		<li><a href="javascript:;">工作记录</a></li>
+		<li><a href="javascript:;">项目评论</a></li>
+	</ul>
+	<div class="mbui-tab-content">
+		<div class="mbui-tab-item mbui-tab-show">
+			<div class="mbui-group">
+				<div class="mbui-list">
+					<div class="mbui-list-bd">项目状态</div>
+					<div class="mbui-list-ft"><span class="check-status-color-{$detail.status}">{$detail.status_name}</span></div>
+				</div>
+				<div class="mbui-list">
+					<div class="mbui-list-bd">计划周期</div>
+					<div class="mbui-list-ft">{$detail.start_time|date='Y-m-d'} 到 {$detail.end_time|date='Y-m-d'}</div>
+				</div>
+				<div class="mbui-list">
+					<div class="mbui-list-bd">项目类别</div>
+					<div class="mbui-list-ft" id="edit_cate_id" data-types="picker" data-min="1" data-text="{$detail.cate_id}" data-api="/project/api/get_project_cate">{$detail.cate}</div>
+				</div>
+				<div class="mbui-list">
+					<div class="mbui-list-bd">项目经理</div>
+					<div class="mbui-list-ft" id="edit_director_uid" data-types="adminpicker" data-min="1" data-text="{$detail.director_uid}">{$detail.director_name|default=''}</div>
+				</div>
+				<div class="mbui-list">
+					<div class="mbui-list-bd">项目成员</div>
+					<div class="mbui-list-ft">{$detail.team_admin_names|default=''}</div>
+				</div>
+				{gt name="$detail.contract_id" value="0"}
+				<div class="mbui-list">
+					<div class="mbui-list-bd">关联合同</div>
+					<div class="mbui-list-ft">{$detail.contract_name}</div>
+				</div>
+				{/gt}	
+				<div class="mbui-form-line">
+					<label class="mbui-form-label">相关附件</label>
+					<div class="mbui-form-uploader">
+						<div class="mbui-uploader-btn-border" id="uploadBtn"><i class="iconfont icon-shangchuan"></i></div>
+					</div>
+					<div id="uploadBox" class="mbui-file-list" style="padding:0 12px 2px;">
+						<input data-type="file" name="file_ids" type="hidden" value="{$detail.file_ids|default=''}">
+						{notempty name="$file_array"}				
+						{volist name="$file_array" id="vo"}
+							{:file_item($vo)}
+						{/volist}
+						{/notempty}
+					</div>
+				</div>			
+			</div>
+
+			{notempty name="$detail.content"}		
+			<div class="padding-12 margin-12-t bg-white f16">
+				<strong>详细描述</strong>
+				<div class="padding-12-t">{$detail.content}</div>
+			</div>
+			{/notempty}
+			
+			
+			<div class="padding-12 margin-12-t bg-white f16">
+				<strong>项目阶段</strong>
+				<div class="mbui-bg-gray radius f14" style="padding:4px 0; margin-top:8px;">
+					<div class="flow-flexbox check-items flow-flex-row">
+						{volist name="$detail.step_array" id="vo"}
+						<div class='flow-flexbox flow-flex-row check-item {eq name="$vo.is_current" value="1"} text-blue{/eq} {notempty name="$step"}{lt name="$vo.sort" value="$step.sort"} text-green{/lt}{else/} text-green{/notempty}'>
+							<strong class="iconfont icon-bianji text-blue"></strong>
+							<strong class="iconfont icon-kaoheguanli text-green"></strong>
+							<strong class="iconfont icon-genjinjilu text-black"></strong>
+							<div class="check-item-name">{$vo.title}</div>
+							<div class="check-item-status">{$vo.check_name|default=''}</div>
+							<span class="iconfont icon-arrow"></span>
+						</div>
+						{/volist}
+					</div>
+				</div>
+				{notempty name="$step"}
+				<div class="padding-16-b f14">
+					<p><span class="text-gray">当前阶段：</span>{$step.title}</p>
+					<p><span class="text-gray">阶段周期：</span>{$step.start_time|date='Y-m-d'} 到 {$step.end_time|date='Y-m-d'}</p>
+					{notempty name="$step.remark"}
+					<p><span class="text-gray">阶段说明：</span>{$step.remark|default=''}</p>
+					{/notempty}
+					{notempty name="$step.unames"}
+					<p><span class="text-gray">阶段成员：</span>{$step.unames|default=''}</p>
+					{/notempty}
+					<p><span class="text-gray">负 责 人 ：</span>{$step.director_name}</p>
+					{eq name="$step.director_uid" value="$login_admin.id"}
+					<div class="padding-12-t">						
+						<span class="mbui-btn mbui-btn-normal sm" data-event="step" data-check="1">确认完成</span>
+						<span class="mbui-btn mbui-btn-danger sm" data-event="step" data-check="2">退回上一阶段</span>
+					</div>
+					{/eq}
+				</div>
+				{/notempty}
+				{notempty name="$step_record"}
+				<div class="border-top padding-12-t">
+					<p class="padding-12-b"><strong>阶段流转记录</strong></p>
+					<div class="mbui-steps">
+						{volist name="$step_record" id="vo"}
+						<div class="mbui-steps-item delete-{$vo.delete_time}">
+							{$vo.check_time_str}
+							{if ($vo.status == 1)}
+							<small>{$vo.check_name} <span class="mbui-text-green">{$vo.status_str}</span> 了『{$vo.title}』的工作。</small>
+							{else /}
+							<small>{$vo.check_name} 在『{$vo.title}』执行了 <span class="mbui-text-red">{$vo.status_str}</span> 操作。操作意见：<span class="mbui-text-red">{$vo.content}</span></small>
+							{/if}
+						</div>
+						{/volist}
+					</div>
+				</div>
+				{/notempty}
+			</div>
+		</div>
+		<div class="mbui-tab-item">
+			<div id="taskBox" class="load-data-list"></div>
+		</div>
+		<div class="mbui-tab-item">
+			<div id="scheduleBox" class="load-data-list"></div>
+		</div>
+		<div class="mbui-tab-item">
+			<div id="commentBox"></div>
+		</div>
+	 </div>
+</div>
+
+<footer class="mbui-bar bar-fixed" id="editBox">
+    <span class="mbui-bar-item click-comment">
+        <span class="mbui-bar-icon">
+			<i class="iconfont icon-tongzhi"></i>
+		</span>
+        <span>发表评论</span>
+    </span>
+    <span class="mbui-bar-item click-edit" data-types="menu" data-array="task" data-role="{$role}">
+        <span class="mbui-bar-icon"><i class="iconfont icon-gongdanguanli"></i></span>
+        <span>编辑操作</span>
+    </span>
+	<a href="/qiye/project/task_add?project_id={$detail.id}" class="mbui-bar-item">
+        <span class="mbui-bar-icon"><i class="iconfont icon-xinzeng"></i></span>
+        <span>工作任务</span>
+    </a>
+</footer>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}
+	<script type="text/javascript">			
+		const project_id = {$detail.id};
+		const task_menu = [
+			{"field":"name","title":"编辑项目主题"},
+			{"field":"director_uid","title":"更换负责人"},
+			{"field":"cate_id","title":"更换项目类别"}
+		];
+		const moduleInit = ['layer','fixedbar','loadData','tab','oaEdit','fileupload','oaComment'];
+		function mbuiInit() {
+			let tool = mbui.tool,loadData = mbui.loadData,layer = mbui.layer,tab = mbui.tab,oaEdit = mbui.oaEdit,fileupload=mbui.fileupload,comment=mbui.oaComment;
+			
+			//附件上传
+			fileupload({
+				ajaxUpload:function(res){
+					tool.post('/project/api/add_file',{'topic_id':project_id,'file_id':res.data.id,'file_name': res.data.name, 'module': 'project'},function(e){
+						layer.msg(e.msg);
+						if(e.code==0){
+							setTimeout(function(){
+								location.reload();
+							},1000)
+						}
+					});
+				}
+			});
+			
+			//快捷编辑
+			oaEdit.init({
+				box:'editBox',
+				id:project_id,
+				url: "/project/api/project_edit",
+				menu:{
+					task:task_menu,
+				}
+			});
+			
+			tab({
+				elem: '#tabs',
+				trigger: 'click'
+			});
+			
+			loadData({
+				url:'/project/api/get_task',
+				where:{project_id:project_id},
+				limit:100,
+				elem:'#taskBox',
+				template:function(data){
+					var listItem = '<a href="/project/task/view/id/'+data.id+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="f16">'+data.title+'</dt>\
+									<dd class="f13"><span class="load-data-span"><i>任务状态：</i>'+data.status_name+'</span><span class="load-data-span"><i>负责人：</i>'+data.director_name+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>预估工时：</i>'+data.plan_hours+'</span><span class="load-data-span"><i>预估结束日期：</i>'+data.end_time+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>任务类别：</i>'+data.cate_name+'</span><span class="load-data-span"><i>优先级：</i>'+data.priority_name+'</span></dd>\
+								</dl>\
+							</a>';
+					return listItem;
+				}	
+			});
+			
+			loadData({
+				url:'/oa/api/get_schedule',
+				elem:'#scheduleBox',
+				where:{project_id:project_id},
+				limit:100,
+				template:function(data){
+					var listItem = '<a href="/oa/schedule/view/id/'+data.id+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="f16">'+data.title+'</dt>\
+									<dd class="f13"><span class="load-data-span"><i>记录时间：</i>'+data.create_time+'</span><span class="load-data-span"><i>执行人：</i>'+data.name+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>工作时间：</i>'+data.start_time+' 至 '+data.end_time+'</span><span class="load-data-span"><i>工时：</i>'+data.labor_time+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>工作类型：</i>'+data.labor_type_string+'</span><span class="load-data-span"><i>工作类别：</i>'+data.work_cate+'</span></dd>\
+								</dl>\
+							</a>';
+					return listItem;
+				}	
+			});			
+			
+			$('body').on('click','[data-event="step"]',function(){
+				let check = $(this).data('check');
+				let callback = function (e) {
+					layer.msg(e.msg);
+					if(e.code==0){
+						tool.reload(2000);
+					}
+				}
+				if(check == 2){
+					layer.prompt('请输入退回的原因或理由！',function(index){                
+						let val=$('#prompt'+index).val();    
+						if(val==''){
+							layer.error('请输入内容');
+							return false;
+						}
+						else{
+							tool.post("/project/api/step_check", {id: project_id,check:check,content:val}, callback);
+						}
+					});
+				}
+				else{
+					layer.confirm('确认已完成该阶段工作，进入下个阶段？', function(index) {
+						tool.post("/project/api/step_check", {id: project_id,check:check}, callback);
+					})
+				}
+			});
+			
+			
+			comment.load('commentBox','project',project_id);
+			
+			$('.click-comment').on('click', function () {
+				comment.textarea(0,project_id,'project','','','',0);
+			})
+			
+			//回复
+			$('#commentBox').on('click', '[data-event="replay"]', function () {
+				let pid = $(this).data('id');
+				let to_uids = $(this).data('uid');
+				let to_unames = $(this).data('unames');
+				comment.textarea(0,project_id,'project','',to_uids,to_unames,pid);
+			})
+			//编辑
+			$('#commentBox').on('click', '[data-event="edit"]', function () {
+				let id = $(this).data('id');
+				let content = $('#comment_' + id).data('content');
+				comment.textarea(id,project_id,'project',content,'','',0);
+			})
+			
+			//删除
+			$('#commentBox').on('click', '[data-event="del"]', function () {
+				let id = $(this).data('id');
+				comment.del(id);
+			})
+		}
+	</script>
+{/block}
+<!-- /脚本 -->

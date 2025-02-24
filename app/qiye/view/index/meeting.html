@@ -1,0 +1,35 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>会议纪要</title> 		
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="note-channel">
+	<div id="listBox" class="load-data-list"></div>
+</div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">	
+		const moduleInit = ['tool','loadData'];
+		function mbuiInit() {
+			let tool = mbui.tool,loadData=mbui.loadData;
+			loadData({
+				url:'/oa/meeting/datalist',
+				template:function(item){
+					var listItem = '<a href="/oa/meeting/view/id/'+item.id+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="note-title f16">'+item.title+'</dt>\
+									<dd class="note-desc f13"><span class="text-gray">会议日期：</span>'+item.meeting_date+'<span class="text-gray" style="margin-left:16px;">主持人：</span>'+item.anchor+'</dd>\
+									<dd class="note-desc f13"><span class="text-gray">主办部门：</span>'+item.did_name+'<span class="text-gray" style="margin-left:16px;">记录人：</span>'+item.recorder_name+'</dd>\
+								</dl>\
+							</a>';
+					return listItem;
+				}	
+			});
+		}
+	</script>
+{/block}

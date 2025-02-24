@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+{block name="title"}
+	<title>Phoenix OA</title>		
+{/block}
+{block name="css"}
+	<link href="/static/assets/mbui/css/mbui.css?v={:get_system_config('system','version')}" rel="stylesheet" >
+{/block}
+{block name="style"}{/block}
+{block name="js"}
+	<script type="text/javascript">
+		const login_admin={$login_admin.id|default="0"};
+	</script>
+{/block}
+</head>
+<body ontouchstart>
+	<div id="root">
+		<div id="app">
+		<!-- 主体 -->
+		{block name="body"}{/block}
+		<!-- /主体 -->
+		</div>
+	</div>
+	
+<!-- 脚本 -->
+{block name="script"}	
+<script type="text/javascript">			
+	const moduleInit = ['tool'];
+	function mbuiInit() {
+		let tool = mbui.tool;
+	}
+</script>
+{/block}
+<!-- /脚本 -->
+<script src="{__STATIC__}/jquery.min.js"></script>
+<script src="{__GOUGU__}/mbui/mbui.js?v={:get_system_config('system','version')}"></script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+{extend name="/base/mobile_base" /}
+{block name="title"}
+	<title>销售机会详细</title>		
+{/block}
+{block name="style"}
+<style>
+.customer-header h1{padding-bottom:8px;}
+</style>
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="padding-12 margin-12-b bg-white customer-header">
+	<h1>{$detail.customer}</h1>
+</div>
+{notempty name="$detail.content"}		
+<div class="padding-12 bg-white margin-12-b f16">
+	<strong>需求描述</strong>
+	<div class="padding-12-t">{$detail.content}</div>
+</div>
+{/notempty}
+<div class="mbui-group">		
+	<div class="mbui-list">
+		<div class="mbui-list-bd">联系人</div>
+		<div class="mbui-list-ft">{$detail.contact|default='-'}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">机会标题</div>
+		<div class="mbui-list-ft">{$detail.title}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">发现时间</div>
+		<div class="mbui-list-ft">{$detail.discovery_time|date='Y-m-d'}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">销售阶段</div>
+		<div class="mbui-list-ft">{$detail.stage_name}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">预计金额</div>
+		<div class="mbui-list-ft">{$detail.expected_amount}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">预计签单时间</div>
+		<div class="mbui-list-ft">{$detail.expected_time|date='Y-m-d'}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">归属人员</div>
+		<div class="mbui-list-ft">{$detail.belong_name}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">协助人员</div>
+		<div class="mbui-list-ft">{$detail.assist_names}</div>
+	</div>			
+</div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}
+	<script type="text/javascript">			
+		const detail_id = {$detail.id};
+		const moduleInit = ['layer','fixedbar'];
+		function mbuiInit() {
+			let tool = mbui.tool,layer = mbui.layer;
+
+		}
+	</script>
+{/block}
+<!-- /脚本 -->

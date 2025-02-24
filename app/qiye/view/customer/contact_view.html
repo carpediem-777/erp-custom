@@ -1,0 +1,78 @@
+{extend name="/base/mobile_base" /}
+{block name="title"}
+	<title>客户联系人详细</title>		
+{/block}
+{block name="style"}
+<style>
+.customer-header h1{padding-bottom:8px;}
+</style>
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="padding-12 margin-12-b bg-white customer-header">
+	<h1>{$detail.customer}</h1>
+</div>
+<div class="mbui-group">		
+	<div class="mbui-list">
+		<div class="mbui-list-bd">姓名</div>
+		<div class="mbui-list-ft">{$detail.name}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">联系电话</div>
+		<div class="mbui-list-ft">{$detail.mobile}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">性别</div>
+		<div class="mbui-list-ft">
+			{eq name="$detail.sex" value="1"}男{/eq}
+			{eq name="$detail.sex" value="2"}女{/eq}
+		</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">微信号</div>
+		<div class="mbui-list-ft">{$detail.wechat|default=''}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">QQ号码</div>
+		<div class="mbui-list-ft">{$detail.qq|default=''}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">电子邮箱</div>
+		<div class="mbui-list-ft">{$detail.email|default=''}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">称谓</div>
+		<div class="mbui-list-ft">{$detail.nickname|default=''}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">部门</div>
+		<div class="mbui-list-ft">{$detail.department|default=''}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">职务</div>
+		<div class="mbui-list-ft">{$detail.position|default=''}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">生日</div>
+		<div class="mbui-list-ft">{$detail.birthday|default=''}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">家庭住址</div>
+		<div class="mbui-list-ft">{$detail.address|default=''}</div>
+	</div>			
+</div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}
+	<script type="text/javascript">			
+		const detail_id = {$detail.id};
+		const moduleInit = ['layer','fixedbar'];
+		function mbuiInit() {
+			let tool = mbui.tool,layer = mbui.layer;
+
+		}
+	</script>
+{/block}
+<!-- /脚本 -->

@@ -1,0 +1,89 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>客户联系人</title> 		
+{/block}
+
+{block name="style"}
+	<style type="text/css">
+	
+	</style>
+{/block}
+
+{block name="body"}
+<form class="mbui-form" id="formBox">
+	<div class="mbui-group-title" style="padding-top:12px">客户联系人</div>		
+	<div class="mbui-group">
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">姓名<i>*</i></label>
+			<input name="name"  class="mbui-form-input" placeholder="请输入" data-verify="required" data-errortips="请完善姓名">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">联系电话<i>*</i></label>
+			<input name="mobile" class="mbui-form-input" placeholder="请输入" data-verify="required" data-errortips="请完善联系电话">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">性别<i>*</i></label>
+			<div class="mbui-form-radio">
+				<input class="mbui-input-radio" type="radio" name="sex" id="labor_radio1" value="1" /><label for="labor_radio1">男</label>
+				<input class="mbui-input-radio" type="radio" name="sex" id="labor_radio2" value="2" /><label for="labor_radio2">女</label>
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">电子邮箱</label>
+			<input name="email" class="mbui-form-input" placeholder="请输入">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">微信号</label>
+			<input name="wechat" class="mbui-form-input" placeholder="请输入">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">QQ号码</label>
+			<input name="qq" class="mbui-form-input" placeholder="请输入">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">称谓</label>
+			<input name="nickname" class="mbui-form-input" placeholder="请输入">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">部门</label>
+			<input name="department" class="mbui-form-input" placeholder="请输入">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">职务</label>
+			<input name="position" class="mbui-form-input" placeholder="请输入">
+		</div>
+	</div>
+	<div class="padding-16 center">
+		<input type="hidden" name="cid" value="{$customer_id}">
+		<button class="mbui-btn mbui-btn-100" data-event="submit">提交保存</button>
+	</div>
+</form>
+	
+{/block}
+
+{block name="script"}	
+	<script type="text/javascript">			
+		const moduleInit = ['tool','form','layer'];
+		function mbuiInit() {
+			let tool = mbui.tool,form= mbui.form,layer=mbui.layer;
+
+			form({
+				submit:function(data){
+					let callback = function (e) {
+						layer.msg(e.msg);
+						if (e.code == 0) {
+							tool.replace('/customer/customer/view/id/{$customer_id}.html',1000);
+						}
+					}
+					if(!data.sex){
+						layer.msg('请选择性别');
+						return false;
+					}
+					tool.post("/customer/contact/add", data, callback);
+					return false;
+				}
+			});		
+		}
+	</script>
+{/block}

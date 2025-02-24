@@ -1,0 +1,88 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>登录 · Phoenix OA</title> 		
+{/block}
+
+{block name="style"}
+	<style type="text/css">
+		#app{ background-image: url('/static/home/images/bgm.png'); background-size: cover; background-repeat: no-repeat; transform-origin: center center; background-position: center center;}
+		.main-wrapper{display: flex;align-items: center; flex-direction: column; justify-content: center; flex: 1 0;width: 100%; min-height: 100vh;}
+		.login-panel{box-shadow:0 0 16px rgba(31, 84, 167, 0.2); background-color:#fff; padding:10px 25px; border-radius:10px;}
+		.oa-logo{text-align:center; padding:12px 0 24px;}
+		.captcha-img{height:44px; margin-right:0}
+		.captcha-img img{width:100%; height:100%; border:1px solid #ddd;}
+		
+		.login-btn{padding:8px 0 16px;}
+		
+		.login-more-tips-warp {padding:6px 0; text-align:center;}		
+		.login-more-tips-warp .login-more-tips-warp-left,.login-more-tips-warp .login-more-tips-warp-right {display: inline-block; height: 1px;  width: 80px;
+		  background-image: linear-gradient(243deg,#eeeeee,rgba(216,218,217,0) 95%); border-radius: .5px; margin-bottom: 4px;}
+		.login-more-tips-warp .login-more-tips-warp-left {margin-right: 10px;}
+		.login-more-tips-warp .login-more-tips-warp-right {transform: scaleX(-1); margin-left: 10px;}
+		.login-more-tips-btn{text-align:center; padding:8px 0 16px;}
+	</style>
+{/block}
+
+{block name="body"}
+	<div class="main-wrapper">
+		<div class="login-panel" style="margin-top:-36px;">
+		<div class="oa-logo">
+			<img src="{:get_system_config('web','logo')}" onerror="javascript:this.src='{__IMG__}/syslogo.png';this.onerror=null;" style="height: 60px;">
+		</div>
+		<form class="mbui-form" id="formBox">
+			<div class="mbui-form-item">
+				<input class="mbui-input" type="text" name="username" value="" placeholder="账户或手机号码" data-verify="required" data-errortips="请输入账户或手机号码">
+			</div>
+			<div class="mbui-form-item">
+				<input class="mbui-input" type="password" name="password" value="" autocomplete="off" placeholder="账户密码" data-verify="required" data-errortips="请输入账户密码">
+			</div>
+			<div class="mbui-form-item">
+				<div class="mbui-input-inline" style="width:132px;">
+					<input class="mbui-input" type="text" name="captcha" data-verify="required|number" placeholder="验证码" data-errortips="请输入验证码">
+				</div>
+				<div class="mbui-input-inline captcha-img" style="width:128px; margin:0;">
+					{:captcha_img()}
+					<input type="hidden" value="{:make_token()}"/>
+				</div>
+			</div>
+			<div class="login-btn">			
+				<button class="mbui-btn mbui-btn-100" data-event="submit">登入系统</button>
+			</div>
+			{eq name=":is_wxwork()" value="true"}
+			<div class="login-more-tips-warp">
+				<span class="login-more-tips-warp-left"></span>
+				<span>其他登录方式</span>
+				<span class="login-more-tips-warp-right"></span>
+			</div>
+			<div class="login-more-tips-btn">
+				<a href="/qiye/login/login" class="mbui-btn mbui-btn-primary mbui-btn-radius mbui-btn-sm" >企业微信登录</a>
+			</div>
+			{/eq}
+		</form>
+		</div>
+	</div>
+	
+{/block}
+
+{block name="script"}	
+	<script type="text/javascript">			
+		const moduleInit = ['tool','form','layer'];
+		function mbuiInit() {
+			let tool = mbui.tool,form= mbui.form,layer=mbui.layer;
+			console.log(tool);
+			form({
+				submit:function(data){
+					let callback = function (e) {
+						layer.msg(e.msg);
+						if (e.code == 0) {
+							location.href='/qiye/index/index';
+						}
+					}
+					tool.post("/qiye/login/login_submit", data, callback);
+					return false;
+				}
+			});		
+		}
+	</script>
+{/block}

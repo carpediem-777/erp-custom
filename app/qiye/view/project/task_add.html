@@ -1,0 +1,111 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>项目任务</title> 		
+{/block}
+
+{block name="style"}
+	<style type="text/css">
+	
+	</style>
+{/block}
+
+{block name="body"}
+<form class="mbui-form" id="formBox">
+	<div class="mbui-group-title" style="padding-top:12px">项目任务</div>
+	<div class="mbui-group">
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">任务主题<i>*</i></label>
+			<input name="title"  class="mbui-form-input" placeholder="请输入" data-verify="required" data-errortips="请完善任务主题">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">工作类型<i>*</i></label>
+			<div class="mbui-form-select">
+				<select name="work_id"  data-verify="required" data-errortips="请完善工作类型">
+					<option value="">--请选择--</option>
+					{volist name=":get_base_data('work_cate')" id="vo"}
+					<option value="{$vo.id}">{$vo.title}</option>
+					{/volist}
+				</select>
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">预估工时<i>*</i></label>
+			<input name="plan_hours" class="mbui-form-input" placeholder="请输入" data-verify="required|number" data-errortips="请完善预估工时">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">预计结束日期<i>*</i></label>
+			<div class="mbui-form-select date-select">
+				<input class="mbui-form-input tool-time" name="end_time" readonly type="text" placeholder="请选择" value="" data-verify="required" data-errortips="请完善工作结束时间">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">任务优先级</label>
+			<div class="mbui-form-select">
+				<select name="priority" data-verify="required">
+					<option value="1" selected>低</option>
+					<option value="2">中</option>
+					<option value="3">高</option>
+					<option value="4">紧急</option>
+				</select>
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">负责人<i>*</i></label>
+			<div class="mbui-form-select admin-select">
+				<input type="text" name="director_name" placeholder="请选择" readonly class="mbui-form-input picker-admin" value="" data-verify="required" data-errortips="请完善负责人">
+				<input type="hidden" name="director_uid" readonly value="0">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">协作人</label>
+			<div class="mbui-form-select admin-select">
+				<input type="text" name="assist_admin_names" placeholder="请选择" readonly class="mbui-form-input picker-admin" data-type="2" value="">
+				<input type="hidden" name="assist_admin_ids" readonly value="">
+			</div>
+		</div>
+		{empty name="$project_id"}
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">关联项目</label>
+			<div class="mbui-form-select">
+				<input type="text" name="project_name" placeholder="请选择" readonly class="mbui-form-input picker-oa" data-url="/project/api/get_project" value="">
+				<input type="hidden" name="project_id" readonly value="">
+			</div>
+		</div>
+		{else/}
+		<input type="hidden" name="project_id" value="{$project_id|default=0}" />
+		{/empty}
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">详细描述<i>*</i></label>
+			<textarea rows="8" name="content" class="mbui-form-input" placeholder="请输入" data-verify="required" data-errortips="请完善详细描述"></textarea>
+		</div>
+	</div>
+	<div class="padding-16 center">
+		<input name="id" type="hidden" value="0">
+		<button class="mbui-btn mbui-btn-100" data-event="submit">提交保存</button>
+	</div>
+</form>
+	
+{/block}
+
+{block name="script"}	
+	<script type="text/javascript">			
+		const moduleInit = ['tool','form','layer','picker','userPicker'];
+		function mbuiInit() {
+			let tool = mbui.tool,form= mbui.form,layer=mbui.layer;
+
+			form({
+				submit:function(data){
+					let callback = function (e) {
+						layer.msg(e.msg);
+						if (e.code == 0) {
+							tool.replace('/qiye/project/task',2000);
+						}
+					}
+					tool.post("/project/task/add", data, callback);
+					return false;
+				}
+			});		
+		}
+	</script>
+{/block}

@@ -1,0 +1,93 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>工作记录</title> 		
+{/block}
+
+{block name="style"}
+	<style type="text/css">
+	
+	</style>
+{/block}
+
+{block name="body"}
+<form class="mbui-form" id="formBox">
+	<div class="mbui-group-title" style="padding-top:12px">工作记录</div>
+	<div class="mbui-group">
+		{notempty name="$task"}
+		<div class="mbui-list">
+			<div class="mbui-list-bd">关联任务</div>
+			<div class="mbui-list-ft">
+				{$task.title}
+				<input name="tid" type="hidden" value="{$task.id}">
+			</div>
+		</div>
+		{/notempty}
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">工作开始时间<i>*</i></label>
+			<div class="mbui-form-select date-select">
+				<input class="mbui-form-input tool-time" readonly name="start_time" type="text" placeholder="请选择" value="" data-verify="required" data-type="datetime" data-errortips="请完善工作开始时间">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">工作结束时间<i>*</i></label>
+			<div class="mbui-form-select date-select">
+				<input class="mbui-form-input tool-time" readonly name="end_time" type="text" placeholder="请选择" value="" data-verify="required" data-type="datetime" data-errortips="请完善工作结束时间">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">工作类别<i>*</i></label>
+			<div class="mbui-form-select">
+				<select name="cid"  data-verify="required" data-errortips="请完善工作类别">
+					<option value="">--请选择--</option>
+					{volist name=":get_base_data('work_cate')" id="vo"}
+					<option value="{$vo.id}">{$vo.title}</option>
+					{/volist}
+				</select>
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">工作类型<i>*</i></label>
+			<div class="mbui-form-radio" data-verify="radio" data-errortips="请完善工作类型">
+				<input class="mbui-input-radio" type="radio" name="labor_type" id="labor_radio1" value="1" /><label for="labor_radio1">案头工作</label>
+				<input class="mbui-input-radio" type="radio" name="labor_type" id="labor_radio2" value="2" /><label for="labor_radio2">外勤工作</label>
+			</div>
+		</div>	
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">工作内容<i>*</i></label>
+			<textarea rows="5" name="title"  class="mbui-form-input" placeholder="请输入工作内容"  data-verify="required" data-errortips="请完善工作内容"></textarea>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">补充描述</label>
+			<textarea rows="5" name="remark"  class="mbui-form-input" placeholder="请输入补充描述"></textarea>
+		</div>
+	</div>
+	<div class="padding-16 center">
+		<input name="id" type="hidden" value="0">
+		<button class="mbui-btn mbui-btn-100" data-event="submit">提交保存</button>
+	</div>
+</form>
+	
+{/block}
+
+{block name="script"}	
+	<script type="text/javascript">			
+		const moduleInit = ['tool','form','layer','picker'];
+		function mbuiInit() {
+			let tool = mbui.tool,form= mbui.form,layer=mbui.layer;
+
+			form({
+				submit:function(data){
+					let callback = function (e) {
+						layer.msg(e.msg);
+						if (e.code == 0) {
+							tool.replace('/qiye/index/schedule',2000);
+						}
+					}
+					tool.post("/oa/schedule/add", data, callback);
+					return false;
+				}
+			});		
+		}
+	</script>
+{/block}

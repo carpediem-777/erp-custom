@@ -1,0 +1,85 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>合同管理</title> 		
+{/block}
+
+{block name="style"}
+	<style type="text/css">
+		html,body {overflow:hidden;}
+		#root {position:absolute; top:0;left:0;right:0;bottom:0; overflow-y:auto;-webkit-overflow-scrolling: touch; overflow-scrolling: touch;}
+	</style>
+{/block}
+
+{block name="body"}
+<div style="padding:12px 12px 8px;">
+	<div class="mbui-grid">
+		<div class="mbui-grid-title">销售合同</div>
+		<div class="mbui-grid-box clearfix">
+			<a href="/qiye/contract/contract?tab=0" class="mbui-grid-item">
+				全部
+				<span class="mbui-grid-item-mun">{$contract_count.a}</span>
+			</a>
+			<a href="/qiye/contract/contract?tab=1" class="mbui-grid-item">
+				待我审批
+				<span class="mbui-grid-item-mun">{$contract_count.b}</span>
+			</a>
+			<a href="/qiye/contract/contract?tab=2" class="mbui-grid-item">
+				我已审批
+				<span class="mbui-grid-item-mun">{$contract_count.c}</span>
+			</a>
+		</div>
+	</div>
+</div>
+<div style="padding:8px 12px;">
+	<div class="mbui-grid">
+		<div class="mbui-grid-title">采购合同</div>
+		<div class="mbui-grid-box clearfix">
+			<a href="/qiye/contract/purchase?tab=0" class="mbui-grid-item">
+				全部
+				<span class="mbui-grid-item-mun">{$purchase_count.a}</span>
+			</a>
+			<a href="/qiye/contract/purchase?tab=1" class="mbui-grid-item">
+				待我审批
+				<span class="mbui-grid-item-mun">{$purchase_count.b}</span>
+			</a>
+			<a href="/qiye/contract/purchase?tab=2" class="mbui-grid-item">
+				我已审批
+				<span class="mbui-grid-item-mun">{$purchase_count.c}</span>
+			</a>
+		</div>
+	</div>
+</div>
+
+<div style="padding:8px 12px;">
+	<div class="mbui-grid">
+		<div class="mbui-grid-title">合同相关</div>
+		<div class="mbui-grid-box clearfix">
+			<a href="/qiye/contract/contract_archive" class="mbui-grid-item">
+				<span class="mbui-grid-item-icon"><i class="iconfont icon-guidanghetong"></i></span>
+				合同归档
+			</a>
+			<a href="/qiye/contract/contract_stop" class="mbui-grid-item">
+			   <span class="mbui-grid-item-icon"><i class="iconfont icon-zhongzhihetong"></i></span>
+				中止合同
+			</a>
+			<a href="/qiye/contract/contract_void" class="mbui-grid-item">
+				<span class="mbui-grid-item-icon"><i class="iconfont icon-zuofeihetong"></i></span>
+				作废合同
+			</a>
+		</div>
+	</div>
+</div>
+
+<div style="height:60px;"></div>	
+{/block}
+
+{block name="script"}	
+	{include file="base/mobile_bar" /}
+	<script type="text/javascript">			
+		const moduleInit = ['layer'];
+		function mbuiInit() {
+			let tool = mbui.tool,layer=mbui.layer;	
+		}
+	</script>
+{/block}

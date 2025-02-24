@@ -1,0 +1,25 @@
+<div class="mbui-group-title">服务信息</div>
+{volist name="$detail.content" id="vo"}
+<div class="mbui-bg-white">	
+	<div class="mbui-list">
+	{$vo.service_title|default=''}
+	</div>				
+	<table class="mbui-table">
+		<tr>
+			<th width="100">服务周期</th>
+			<th width="100">服务单价</th>
+			<th width="100">服务次数</th>
+			<th width="100">小计</th>
+		</tr>
+		{volist name="$detail.content" id="vo"}
+		<tr>
+			<td>{$vo.service_date|default=''}</td>
+			<td>{$vo.service_price|default='0.00'}</td>
+			<td>{$vo.service_num|default='1'}</td>
+			<td>{$vo.service_subtotal|default='0.00'}</td>
+		</tr>
+		{/volist}
+	</table>
+</div>
+{/volist}
+

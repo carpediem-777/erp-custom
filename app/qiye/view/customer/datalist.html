@@ -1,0 +1,54 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>客户中心</title> 		
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="note-channel">
+    <div class="mbui-tab">
+        <ul class="mbui-tab-title">
+			<li {eq name="$tab" value="0"} class="active" {/eq}>
+                <a class="link-a" href="javascript:;" data-href="/qiye/customer/datalist?tab=0">全部</a>
+            </li>
+            <li {eq name="$tab" value="1"} class="active" {/eq}>
+                <a class="link-a" href="javascript:;" data-href="/qiye/customer/datalist?tab=1">我的客户</a>
+            </li>
+			<li {eq name="$tab" value="2"} class="active" {/eq}>
+                 <a class="link-a" href="javascript:;" data-href="/qiye/customer/datalist?tab=2">下属客户</a>
+            </li>
+            <li {eq name="$tab" value="3"} class="active" {/eq}>
+                 <a class="link-a" href="javascript:;" data-href="/qiye/customer/datalist?tab=3">共享客户</a>
+            </li>
+        </ul>
+    </div>
+	<div id="listBox" class="load-data-list"></div>
+</div>
+<div class="mbui-new-add"><a href="/customer/customer/add" title="新增客户" data-event="menu"><i class="iconfont icon-addnew"></i></a></div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">
+		const tab = {$tab};
+		const moduleInit = ['tool','loadData'];
+		function mbuiInit() {
+			let tool = mbui.tool,loadData=mbui.loadData;
+			loadData({
+				url:'/customer/customer/datalist',
+				where:{tab:tab},
+				template:function(data){
+					var listItem = '<a href="/customer/customer/view/id/'+data.id+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="f16">'+data.name+'</dt>\
+									<dd class="f13"><span class="load-data-span"><i>联 系 人：</i>'+data.contact_name+'</span><span class="load-data-span"><i>联系电话：</i>'+data.contact_mobile+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>所属员工：</i>'+data.belong_name+'</span><span class="load-data-span"><i>所属部门：</i>'+data.belong_department+'</span></dd>\
+								</dl>\
+							</a>';
+					return listItem;
+				}	
+			});
+		}
+	</script>
+{/block}

@@ -1,0 +1,57 @@
+{extend name="/base/mobile_base" /}
+{block name="title"}
+	<title>工作记录</title>		
+{/block}
+{block name="style"}
+<style>
+
+</style>
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="padding-12 bg-white f16">
+	<div><strong>工作内容</strong></div>
+	<div class="padding-12-t">{$detail.title}</div>
+</div>
+{notempty name="$detail.remark"}
+<div class="padding-12 margin-12-t bg-white f16">
+	<div><strong>补充描述</strong></div>
+	<div class="padding-12-t">{$detail.remark}</div>
+</div>
+{/notempty}
+
+<div class="mbui-group margin-12-t">
+	<div class="mbui-list">
+		<div class="mbui-list-bd">记录时间</div>
+		<div class="mbui-list-ft">{$detail.create_time}</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">执行员工</div>
+		<div class="mbui-list-ft">{$detail.name}</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">工作类别</div>
+		<div class="mbui-list-ft">{$detail.work_cate}</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">工作类型</div>
+		<div class="mbui-list-ft">{$detail.labor_type_string}</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">工作时间</div>
+		<div class="mbui-list-ft">{$detail.start_time} {$detail.start_time_1} 至 {$detail.end_time_1}</div>
+    </div>
+</div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">			
+		const moduleInit = ['fixedbar'];
+		function mbuiInit() {
+			let tool = mbui.tool;
+		}
+	</script>
+{/block}
+<!-- /脚本 -->

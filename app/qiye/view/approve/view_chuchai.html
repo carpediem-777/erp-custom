@@ -1,0 +1,74 @@
+{extend name="/base/mobile_base" /}
+{block name="title"}
+	<title>出差审批</title>		
+{/block}
+{block name="style"}
+<style>
+.user-name{line-height:26px;}
+.user-ops{font-size:14px; color:#999;}
+</style>
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="mbui-user-panel margin-16-b">
+	<div class="avatar">
+		<img src="{$create_user.thumb|default=''}" alt="{$create_user.name|default=''}">
+	</div>
+	<div class="panel-info">
+		<div class="user-name">{$create_user.name|default=''}的出差审批</div>
+		<div class="user-ops">部门：{$create_user.department|default=''}，职称：{$create_user.position|default=''}</div>
+	</div>
+</div>
+<div class="mbui-group">
+	<div class="mbui-list">
+		<div class="mbui-list-bd">申请时间</div>
+		<div class="mbui-list-ft">{$detail.create_time}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">开始时间</div>
+		<div class="mbui-list-ft">{$detail.start_date}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">结束时间</div>
+		<div class="mbui-list-ft">{$detail.end_date}</div>
+	</div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">出差天数</div>
+		<div class="mbui-list-ft">共{$detail.duration}天</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">出差事由</div>
+		<div>{:nl2br($detail.reason)}</div>
+	</div>
+</div>
+{notempty name="$detail.file_array"}
+<div class="mbui-group-title">相关附件</div>
+<div class="bg-white">
+	<div class="mbui-file-list" style="padding:12px 12px 2px;">
+	{volist name="$detail.file_array" id="vo"}
+		{:file_item($vo,'view')}
+	{/volist}
+	</div>
+</div>
+{/notempty}
+
+<div id="checkBox" data-status="{$detail.check_status}" data-id="{$detail.id}" data-checkflowid="{$detail.check_flow_id}"></div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">			
+		const moduleInit = ['layer','fixedbar','oaCheck','fileupload'];
+		const id = {$detail.id};
+		function mbuiInit() {
+			let tool = mbui.tool,layer=mbui.layer,oaCheck=mbui.oaCheck;
+			//审批相关
+			oaCheck.init({
+				check_name:'trips',
+				checking_btn:'<button class="mbui-btn bg-green link-a" data-href="/home/trips/add/id/'+id+'.html">编辑</button>'
+			});
+		}
+	</script>
+{/block}
+<!-- /脚本 -->

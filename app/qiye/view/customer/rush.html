@@ -1,0 +1,33 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>抢客宝</title> 		
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div id="listBox" class="load-data-list"></div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">
+		const moduleInit = ['tool','loadData'];
+		function mbuiInit() {
+			let tool = mbui.tool,loadData=mbui.loadData;
+			loadData({
+				url:'/customer/index/rush',
+				template:function(data){
+					var listItem = '<a href="/customer/customer/view/id/'+data.id+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="f16">'+data.name+'</dt>\
+									<dd class="f13"><span class="load-data-span"><i>联 系 人：</i>'+data.contact_name+'</span><span class="load-data-span"><i>联系电话：</i>'+data.contact_mobile+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>客户等级：</i>'+data.grade+'</span><span class="load-data-span"><i>所属行业：</i>'+data.industry+'</span></dd>\
+								</dl>\
+							</a>';
+					return listItem;
+				}	
+			});
+		}
+	</script>
+{/block}

@@ -1,0 +1,87 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>项目管理</title> 		
+{/block}
+
+{block name="style"}
+	<style type="text/css">
+		html,body {overflow:hidden;}
+		#root {position:absolute; top:0;left:0;right:0;bottom:0; overflow-y:auto;-webkit-overflow-scrolling: touch; overflow-scrolling: touch;}
+	</style>
+{/block}
+
+{block name="body"}
+<div style="padding:12px 12px 8px;">
+	<div class="mbui-grid">
+		<div class="mbui-grid-title">常用功能</div>
+		<div class="mbui-grid-box clearfix">
+			<a href="/qiye/project/project" class="mbui-grid-item">
+				<span class="mbui-grid-item-icon"><i class="iconfont icon-xiangmu1"></i></span>
+				项目列表
+			</a>
+			<a href="/qiye/project/task" class="mbui-grid-item">
+			   <span class="mbui-grid-item-icon"><i class="iconfont icon-xiangmurenwu"></i></span>
+				工作任务
+			</a>
+			<a href="/qiye/project/schedule" class="mbui-grid-item">
+				<span class="mbui-grid-item-icon"><i class="iconfont icon-renwugongshi"></i></span>
+				任务工时
+			</a>
+			<a href="/qiye/project/document" class="mbui-grid-item">
+				<span class="mbui-grid-item-icon"><i class="iconfont icon-xiangmuwendang"></i></span>
+				项目文档
+			</a>
+		</div>
+	</div>
+</div>
+<div style="padding:8px 12px;">
+	<div class="mbui-grid">
+		<div class="mbui-grid-title">项目管理</div>
+		<div class="mbui-grid-box clearfix">
+			<a href="/qiye/project/project?tab=1" class="mbui-grid-item">
+				进行中
+				<span class="mbui-grid-item-mun">{$project_count.a}</span>
+			</a>
+			<a href="/qiye/project/project?tab=2" class="mbui-grid-item">
+				即将逾期
+				<span class="mbui-grid-item-mun">{$project_count.b}</span>
+			</a>
+			<a href="/qiye/project/project?tab=3" class="mbui-grid-item">
+				已逾期
+				<span class="mbui-grid-item-mun">{$project_count.c}</span>
+			</a>
+		</div>
+	</div>
+</div>
+<div style="padding:8px 12px;">
+	<div class="mbui-grid clearfix">
+		<div class="mbui-grid-title">工作任务</div>
+		<div class="mbui-grid-box clearfix">
+			<a href="/qiye/project/task?tab=1" class="mbui-grid-item">
+				进行中
+				<span class="mbui-grid-item-mun">{$task_count.a}</span>
+			</a>
+			<a href="/qiye/project/task?tab=2" class="mbui-grid-item">
+				即将逾期
+				<span class="mbui-grid-item-mun">{$task_count.b}</span>
+			</a>
+			<a href="/qiye/project/task?tab=3" class="mbui-grid-item">
+				已逾期
+				<span class="mbui-grid-item-mun">{$task_count.c}</span>
+			</a>
+		</div>
+    </div>
+ </div>
+<div style="height:60px;"></div>		
+{/block}
+
+{block name="script"}	
+	{include file="base/mobile_bar" /}
+	<script type="text/javascript">			
+		const moduleInit = ['layer'];
+		function mbuiInit() {
+			let tool = mbui.tool,layer=mbui.layer;	
+		}
+	</script>
+{/block}

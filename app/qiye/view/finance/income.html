@@ -1,0 +1,58 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>发票回款</title> 		
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="mbui-tab">
+	<ul class="mbui-tab-title">
+		<li class="active">
+			<a class="link-a" href="javascript:;" data-href="/qiye/finance/income">发票回款</a>
+		</li>
+		<li>
+			<a class="link-a" href="javascript:;" data-href="/qiye/finance/income_a">无发票回款</a>
+		</li>
+	</ul>
+</div>
+<div id="listBox" class="load-data-list"></div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">
+		const moduleInit = ['tool','loadData'];
+		function mbuiInit() {
+			let tool = mbui.tool,loadData=mbui.loadData;
+			loadData({
+				url:'/qiye/finance/income',
+				template:function(data){
+					let enter_status='';
+					if(data.check_status==2){
+						enter_status = '<span class="mbui-text-red">未回款</span>';
+						if(data.enter_status==1){
+							enter_status = '<span class="mbui-text-blue">部分回款</span>';
+						}
+						else if(data.enter_status==2){
+							enter_status = '<span class="mbui-text-green">已回款</span>';
+						}
+					}
+					else{
+						enter_status='-';
+					}
+				
+					var listItem = '<a href="/finance/income/view/id/'+data.id+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="f16">回款金额：'+data.enter_amount+'，发票金额：'+data.amount+'</dt>\
+									<dd class="f13"><span class="load-data-span"><i>回款状态：</i>'+enter_status+'</span><span class="load-data-span"><i>最新回款时间：</i>'+data.enter_time+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><span class="load-data-span"><i>申请人：</i>'+data.admin_name+'</span><span class="load-data-span"><span class="load-data-span"><i>发票号码：</i>'+data.code+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>开票抬头：</i>'+data.invoice_title+'</span></dd>\
+								</dl>\
+							</a>';
+					return listItem;
+				}	
+			});
+		}
+	</script>
+{/block}

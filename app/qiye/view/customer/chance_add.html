@@ -1,0 +1,106 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>销售机会</title> 		
+{/block}
+
+{block name="style"}
+	<style type="text/css">
+	
+	</style>
+{/block}
+
+{block name="body"}
+<form class="mbui-form" id="formBox">
+	<div class="mbui-group-title" style="padding-top:12px">销售机会</div>
+	<div class="mbui-group">		
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">机会标题<i>*</i></label>
+			<input name="title"  class="mbui-form-input" placeholder="请输入" data-verify="required" data-errortips="请完善机会标题">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">联系人<i>*</i></label>
+			<div class="mbui-form-select">
+				<select name="contact_id"  data-verify="required" data-errortips="请完善联系人">
+					<option value="">--请选择--</option>
+					{volist name=":customer_contact($customer_id)" id="v"}
+					<option value="{$v.id}">{$v.name}</option>
+					{/volist}
+				</select>
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">发现时间<i>*</i></label>
+			<div class="mbui-form-select date-select">
+				<input class="mbui-form-input tool-time" name="discovery_time" readonly type="text" placeholder="请选择" value="" data-verify="required" data-errortips="请完善发现时间">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">销售阶段<i>*</i></label>
+			<div class="mbui-form-select">
+				<select name="stage"  data-verify="required" data-errortips="请完善销售阶段">
+					<option value="">--请选择--</option>
+					{volist name=":get_base_type_data('basic_customer',4)" id="v"}
+					<option value="{$v.id}">{$v.title}</option>
+					{/volist}
+				</select>
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">预计金额<i>*</i></label>
+			<input name="expected_amount" class="mbui-form-input" placeholder="请输入" data-verify="required|number" data-errortips="请完善预计金额">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">预计签单时间<i>*</i></label>
+			<div class="mbui-form-select date-select">
+				<input class="mbui-form-input tool-time" name="expected_time" readonly type="text" placeholder="请选择" value="" data-verify="required" data-errortips="请完善预计签单时间">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">归属人员<i>*</i></label>
+			<div class="mbui-form-select admin-select">
+				<input type="text" name="belong_name" placeholder="请选择" readonly class="mbui-form-input picker-admin" value="" data-verify="required" data-errortips="请完善归属人员">
+				<input type="hidden" name="belong_uid" readonly value="0">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">协助人员</label>
+			<div class="mbui-form-select admin-select">
+				<input type="text" name="assist_names" placeholder="请选择" readonly class="mbui-form-input picker-admin" data-type="2" value="">
+				<input type="hidden" name="assist_ids" readonly value="">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">需求描述<i>*</i></label>
+			<textarea rows="5" name="content" class="mbui-form-input" placeholder="请输入" data-verify="required" data-errortips="请输入需求描述"></textarea>
+		</div>
+	</div>
+	<div class="padding-16 center">
+		<input type="hidden" name="cid" value="{$customer_id}">
+		<button class="mbui-btn mbui-btn-100" data-event="submit">提交保存</button>
+	</div>
+</form>
+	
+{/block}
+
+{block name="script"}	
+	<script type="text/javascript">			
+		const moduleInit = ['tool','form','layer','picker','userPicker'];
+		function mbuiInit() {
+			let tool = mbui.tool,form= mbui.form,layer=mbui.layer;
+
+			form({
+				submit:function(data){
+					let callback = function (e) {
+						layer.msg(e.msg);
+						if (e.code == 0) {
+							tool.replace('/customer/customer/view/id/{$customer_id}.html',1000);
+						}
+					}
+					tool.post("/customer/chance/add", data, callback);
+					return false;
+				}
+			});		
+		}
+	</script>
+{/block}

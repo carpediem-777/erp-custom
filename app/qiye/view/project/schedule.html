@@ -1,0 +1,36 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>任务工时</title> 		
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="note-channel">
+	<div id="listBox" class="load-data-list"></div>
+</div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">
+		const moduleInit = ['tool','loadData','layer'];
+		function mbuiInit() {
+			let tool = mbui.tool,loadData=mbui.loadData,layer=mbui.layer;
+			loadData({
+				url:'/project/task/hour',
+				template:function(data){
+					var listItem = '<a href="/oa/schedule/view/id/'+data.id+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="f16">'+data.title+'</dt>\
+									<dd class="f13"><span class="load-data-span"><i>记录时间：</i>'+data.create_time+'</span><span class="load-data-span"><i>执行人：</i>'+data.name+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>工作时间：</i>'+data.start_time+' 至 '+data.end_time+'</span><span class="load-data-span"><i>工时：</i>'+data.labor_time+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>工作类型：</i>'+data.labor_type_string+'</span><span class="load-data-span"><i>工作类别：</i>'+data.work_cate+'</span></dd>\
+								</dl>\
+							</a>';
+					return listItem;
+				}	
+			});
+		}
+	</script>
+{/block}

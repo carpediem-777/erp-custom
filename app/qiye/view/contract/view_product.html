@@ -1,0 +1,25 @@
+<div class="mbui-group-title">产品信息</div>
+{volist name="$detail.content" id="vo"}
+<div class="mbui-bg-white">	
+	<div class="mbui-list">
+		{$vo.product_title|default=''}
+	</div>	
+	<table class="mbui-table">
+		<tr>
+			<th width="100">单位</th>
+			<th width="100">规格</th>
+			<th width="100">销售单价</th>
+			<th width="100">数量</th>
+			<th width="100">小计</th>
+		</tr>
+		<tr>
+			<td>{$vo.product_unit|default=''}</td>
+			<td>{$vo.product_specs|default=''}</td>
+			<td>{$vo.product_price|default='0.00'}</td>
+			<td>{$vo.product_num|default='1'}</td>
+			<td>{$vo.product_subtotal|default='0.00'}</td>
+		</tr>
+	</table>
+</div>
+{/volist}
+

@@ -1,0 +1,51 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>消息中心</title> 		
+{/block}
+{block name="style"}
+	<style type="text/css">
+	html,body {overflow:hidden;}
+	#root {position:absolute; top:0;left:0;right:0;bottom:0; overflow-y:auto;-webkit-overflow-scrolling: touch; overflow-scrolling: touch;}
+	.msg-channel{width:100%;}
+	.msg-list dt{float:left;width:48px; height:48px; position:relative;}
+	.msg-list dt img{width:48px; height:48px; border-radius:5px;}
+	.msg-list dt .red-dot{width:10px; height:10px; background-color:#ff5722; border-radius:50%; margin-right:3px; position:absolute; top:-2px; right:-6px; display:none}
+	.msg-list dt .red-dot.red-dot-0{display:block;}
+	.msg-list dd{margin-left: 60px;}
+	.msg-list dd.msg-title{margin-bottom: 3px;}
+	.msg-list dd.msg-ops{color: #999; line-height:20px;}
+	</style>
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="msg-channel">
+	<div id="listBox" class="load-data-list msg-list"></div>
+</div>
+<div style="height:60px;"></div>	
+{/block}
+<!-- /主体 -->
+
+{block name="script"}
+	{include file="base/mobile_bar" /}
+	<script type="text/javascript">	
+		const moduleInit = ['tool','loadData'];
+		function mbuiInit() {
+			let tool = mbui.tool,loadData=mbui.loadData;
+			loadData({
+				url:'/qiye/msg/index',
+				scroll:2,
+				template:function(item){
+					var listItem = '<a href="/qiye/msg/read/id/'+item.id+'.html" class="border-bottom msg-li">\
+						<dl class="clearfix">\
+							<dt><img src="'+item.thumb+'"/><div class="red-dot red-dot-'+item.read_time+'"></div></dt>\
+							<dd class="msg-title f16 line-limit-1">'+item.title+'</dd>\
+							<dd class="msg-ops f13"><span>发送时间：'+item.create_time+'</span></dd>\
+						</dl>\
+					</a>';
+					return listItem;
+				}	
+			});
+		}
+	</script>
+{/block}

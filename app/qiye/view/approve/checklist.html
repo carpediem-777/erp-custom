@@ -1,0 +1,63 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>我处理的审批</title> 		
+{/block}
+{block name="style"}
+	<style type="text/css">
+		.apply-channel{width:100%;}
+		.apply-title{font-size:18px;}
+		.check-status{font-size:15px;}
+		.load-more{padding:12px 0; text-align:center; color:#999}
+	</style>
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="apply-channel">
+    <div class="mbui-tab">
+        <ul class="mbui-tab-title">
+			<li class="{$status==1?'active':''}">
+                <a class="link-a" href="javascript:;" data-href="/qiye/approve/checklist?status=1">全部</a>
+            </li>
+            <li class="{$status==2?'active':''}">
+                <a class="link-a" href="javascript:;" data-href="/qiye/approve/checklist?status=2">待我审批</a>
+            </li>
+            <li class="{$status==3?'active':''}">
+                 <a class="link-a" href="javascript:;" data-href="/qiye/approve/checklist?status=3">我已审批</a>
+            </li>
+        </ul>
+    </div>
+	<div id="listBox" class="load-data-list apply-list"></div>
+</div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}
+	<script type="text/javascript">	
+		const status = {$status};
+		const moduleInit = ['tool','loadData'];
+		function mbuiInit() {
+			let tool = mbui.tool,loadData=mbui.loadData;
+			loadData({
+				url:'/qiye/approve/checklist',
+				"where":{status:status},
+				template:function(item){
+					let check='';
+					if(item.check_users != '-' && item.check_users != ''){
+						check='<dd class="apply-desc"><span class="mbui-text-grey">当前审批人：</span>'+item.check_users+'</dd>';
+					}
+					var listItem = '<a href="'+item.view_url+'/id/'+item.id+'.html">\
+						<dl class="border-top clearfix">\
+							<dt class="apply-title">'+item.types_name+' <span class="check-status check-status-color-'+item.check_status+'">『'+item.check_status_str+'』</span></dt>\
+							<dd class="apply-desc"><span class="mbui-text-grey">申 请 人：</span>'+item.admin_name+' - '+item.department+'</dd>\
+							<dd class="apply-desc"><span class="mbui-text-grey">申请日期：</span>'+item.create_time+'</dd>'+check+'\
+						</dl>\
+					</a>';
+					return listItem;
+				}	
+			});
+		}
+	</script>
+{/block}
+<!-- /脚本 -->

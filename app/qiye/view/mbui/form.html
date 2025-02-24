@@ -1,0 +1,142 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>工作汇报</title> 		
+{/block}
+
+{block name="style"}
+	<style type="text/css">
+	
+	</style>
+{/block}
+
+{block name="body"}
+<form class="mbui-form" id="formBox">
+	<div class="mbui-group">
+		<div class="mbui-group-title">表单标题</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">标题文本</label>
+			<input class="mbui-form-input" name="name" type="text" placeholder="请输入" value="" data-verify="required" data-errortips="请完善标题文本">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">搜索输入</label>
+			<input class="mbui-form-input" name="search" type="search" placeholder="请输入关键字" value="" data-verify="required" data-errortips="请输入关键字">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">选择年月日</label>
+			<div class="mbui-form-select date-select">
+				<input class="mbui-form-input tool-time" name="start_date" type="text" placeholder="请选择" value="" data-verify="required" data-errortips="请完善日期">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">选择详细时间</label>
+			<div class="mbui-form-select date-select">
+				<input class="mbui-form-input tool-time" name="end_date" data-type="datetime" placeholder="请选择" value="" data-verify="required" data-errortips="请完善详细时间">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">仅选择时间</label>
+			<div class="mbui-form-select date-select">
+				<input class="mbui-form-input tool-time" name="start_date" data-type="time" placeholder="请选择" value="" data-verify="required" data-errortips="请完善时间">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">仅选择月份</label>
+			<div class="mbui-form-select date-select">
+				<input class="mbui-form-input tool-time" name="start_date" data-type="month" placeholder="请选择" value="" data-verify="required" data-errortips="请完善月份">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">选择类型</label>
+			<div class="mbui-form-select">
+				<select name="selct">
+					<option value="1">选择一</option>
+					<option value="2">选择二</option>
+					<option value="3">选择三</option>
+				</select>
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">工作类型</label>
+			<div class="mbui-form-radio">
+				<input class="mbui-input-radio" type="radio" name="labor_type" id="labor_radio1" /><label for="labor_radio1">案头工作</label>
+				<input class="mbui-input-radio" type="radio" name="labor_type" id="labor_radio2" /><label for="labor_radio2">外勤工作</label>
+			</div>
+		</div>	
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">标签类型</label>
+			<div class="mbui-form-checkbox">
+				<input class="mbui-input-checkbox" type="checkbox" name="labor_types" id="labor_checkbox1" /><label for="labor_checkbox1">勤奋</label>
+				<input class="mbui-input-checkbox" type="checkbox" name="labor_types" id="labor_checkbox2" /><label for="labor_checkbox2">好学</label>
+				<input class="mbui-input-checkbox" type="checkbox" name="labor_types" id="labor_checkbox3" /><label for="labor_checkbox3">聪明</label>
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">工作内容</label>
+			<textarea rows="5" name="plans"  class="mbui-form-input" placeholder="请输入工作内容"  data-verify="required" data-errortips="请完善工作内容"></textarea>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">补充描述</label>
+			<textarea rows="5" name="remark"  class="mbui-form-input" placeholder="请输入补充描述"></textarea>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">相关附件</label>
+			<div class="mbui-form-uploader">
+				<div class="mbui-uploader-btn-border" id="uploadBtn"><i class="iconfont icon-shangchuan"></i></div>
+			</div>
+			<div id="uploadBox" class="mbui-file-list">
+				<input data-type="file" name="file_ids" type="hidden" value="">
+			</div>
+		</div>
+	</div>
+	<div class="padding-lr">
+		<button class="mbui-btn mbui-btn-100" data-event="submit">提交保存</button>
+	</div>
+</form>
+
+<div class="mbui-group" style="margin-top:16px;">
+	<div class="mbui-radio-checkbox">
+		<label for="list_radio1">案头工作<input class="mbui-radio" type="radio" name="labor_type" id="list_radio1" /></label>
+	</div>
+	<div class="mbui-radio-checkbox">
+		<label for="list_radio2">外勤工作<input class="mbui-radio" type="radio" name="labor_type" id="list_radio2" /></label>
+	</div>
+</div>
+<div class="mbui-group">
+	<div class="mbui-radio-checkbox">
+		<label for="list_checkbox1">勤奋<input class="mbui-checkbox" type="checkbox" name="labor_types" id="list_checkbox1" /></label>
+	</div>
+	<div class="mbui-radio-checkbox">
+		<label for="list_checkbox2">好学<input class="mbui-checkbox" type="checkbox" name="labor_types" id="list_checkbox2" /></label>
+	</div>
+	<div class="mbui-radio-checkbox">
+		<label for="list_checkbox3">聪明<input class="mbui-checkbox" type="checkbox" name="labor_types" id="list_checkbox3" /></label>
+	</div>
+</div>
+	
+{/block}
+
+{block name="script"}	
+	<script type="text/javascript">			
+		const moduleInit = ['tool','form','layer','picker','userPopup','fileupload'];
+		function mbuiInit() {
+			let tool = mbui.tool,form= mbui.form,layer=mbui.layer,fileupload = mbui.fileupload;
+			
+			//附件上传
+			fileupload();
+			
+			form({
+				submit:function(data){
+					let callback = function (e) {
+						layer.msg(e.msg);
+						if (e.code == 0) {
+							location.href='/qiye/index/work';
+						}
+					}
+					tool.post("/oa/work/add", data, callback);
+					return false;
+				}
+			});		
+		}
+	</script>
+{/block}

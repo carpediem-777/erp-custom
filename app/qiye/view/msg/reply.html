@@ -1,0 +1,117 @@
+{extend name="/base/mobile_base" /}
+{block name="title"}
+	<title>回复消息</title>
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="bg-white">
+	<div class="mobile-bar">
+		<div class="mobile-bar-left" id="back">取消</div>
+		<div class="mobile-bar-title">回复消息</div>
+		<div class="mobile-bar-right text-blue" id="send">发送</div>
+	</div>
+	<div>
+		<div class="mobile-form">
+			<label for="input1" class="mobile-label">
+				<div class="mobile-label-title"><span class="m-label">收件人</span></div>
+				<div class="mobile-label-input">
+					<input id="input1" class="m-input" name="person_name" readonly value="{$send_names}" placeholder="请选择收件人">
+					<input type="hidden" name="uids" value="{$send_uids}">
+					<input type="hidden" name="copy_uids" value="">
+				</div>
+			</label>
+			<label for="input3" class="mobile-label">
+				<div class="mobile-label-title"><span class="m-label">消息主题</span></div>
+				<div class="mobile-label-input">
+					<input id="input2" class="m-input" name="title" value="回复：{$detail.title}" placeholder="请输入消息主题">
+				</div>
+			</label>
+		</div>
+			
+		<div class="mobile-form-vertical">			
+			<label for="content" class="mobile-label">
+				<div class="mobile-label-title"><label class="m-label">消息内容</label></div>
+				<div class="mobile-label-input">
+					<textarea id="content" name="content" placeholder="请输入消息内容" class="m-textarea"></textarea>
+				</div>
+			</label>
+		</div>
+			
+		<div style="padding:12px;">
+			<fieldset style="border:1px solid #eeeeee; background-color:#f9f9f9;padding:6px 12px;"><legend>原消息内容：</legend>
+			{:nl2br($detail.content)}
+			{notempty name="$detail.file_ids"}
+			<div class="file-tips">原消息有附件，请到PC端查看。</div>
+			{/notempty}
+			</fieldset>
+		</div>
+	</div>
+</div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}
+<script>
+	const fid = {$fid};
+	const moduleInit = ['tool','layer'];
+	function mbuiInit() {
+		let tool = mbui.tool,layer=mbui.layer;
+		$('#back').on('click', function(){
+			location.href='/qiye/msg/read/id/{$fid}';
+		})
+		//监听保存到草稿并发送
+		$('#send').on('click', function(){
+			let uids = $('[name="uids"]').val();
+			let copy_uids = $('[name="copy_uids"]').val();
+			let title = $('[name="title"]').val();
+			let content = $('[name="content"]').val();
+			if(uids ==''){
+				layer.msg('请完善收件人');
+				return false;
+			}
+			if(title ==''){
+				layer.msg('请完善消息主题');
+				return false;
+			}
+			if(content ==''){
+				layer.msg('请完善消息内容');
+				return false;
+			}
+			$.ajax({
+				url: "/message/index/save",
+				type:'post',
+				data:{
+					uids:uids,
+					copy_uids:copy_uids,
+					title:title,
+					content:content,
+					fid:fid,
+					type:1,
+					file_ids:''
+				},
+				success:function(e){
+					if(e.code==0){
+						layer.msg('消息保存成功，正在发送中...');
+						$.ajax({
+							url: "/message/index/send",
+							type:'post',
+							data:{'id':e.data},
+							success: function (e) {
+								layer.msg(e.msg);
+								if (e.code == 0) {
+									location.href='/qiye/msg/index';
+								}
+							}
+						})
+					}else{
+					  layer.msg(e.msg);
+					}
+				}
+			})
+			return false;
+		});	
+	}
+</script>
+{/block}
+<!-- /脚本 -->

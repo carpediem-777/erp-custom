@@ -1,0 +1,71 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>工作汇报</title> 		
+{/block}
+
+{block name="style"}
+	<style type="text/css">
+	.user-panel{background-color: #fff; padding:12px;}	
+	</style>
+{/block}
+
+{block name="body"}
+<div class="user-panel">
+	<div class="mbui-flex-panel">
+		<div class="mbui-flex-avatar">
+			<div class="mbui-flex-avatar-img"><img src="/static/home/images/icon.png"></div>
+		</div>
+		<div class="mbui-flex-content">
+			<div class="mbui-flex-title">
+				超级员工 
+				<span class="check-status-color-1 margin-left fn f12">
+				『正式员工』				</span>
+			</div>
+			<div class="mbui-flex-description">
+				<span class="mbui-text-grey">部门：</span>董事会 <span class="mbui-text-grey margin-left">岗位：</span>超级岗位</div>
+		</div>
+	</div>
+</div>
+
+<div class="mbui-group">
+	<a class="mbui-list" href="/qiye/approve/apply">
+		<div class="mbui-list-bd">办公审批申请</div>
+		<div class="mbui-list-ft">
+			<i class="mbui-list-ft-arrow"></i>
+		</div>
+	</a>
+</div>
+<div class="mbui-group">
+	<a class="mbui-list" href="/qiye/approve/mylist">
+		<div class="mbui-list-bd">我申请的审批</div>
+		<div class="mbui-list-ft">
+			<i class="mbui-list-ft-arrow"></i>
+		</div>
+	</a>
+	
+	<a class="mbui-list" href="/qiye/approve/checklist">
+		<div class="mbui-list-bd">我处理的审批</div>
+		<div class="mbui-list-ft">
+			<i class="mbui-list-ft-arrow"></i>
+		</div>
+	</a>
+
+	<a class="mbui-list" href="/qiye/approve/copylist">
+		<div class="mbui-list-bd">抄送给我的审批</div>
+		<div class="mbui-list-ft">
+			<i class="mbui-list-ft-arrow"></i>
+		</div>
+	</a>
+</div>
+	
+{/block}
+
+{block name="script"}	
+	<script type="text/javascript">			
+		const moduleInit = ['tool'];
+		function mbuiInit() {
+			let tool = mbui.tool;	
+		}
+	</script>
+{/block}

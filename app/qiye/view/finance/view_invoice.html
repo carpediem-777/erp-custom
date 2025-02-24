@@ -1,0 +1,141 @@
+{extend name="/base/mobile_base" /}
+{block name="title"}
+	<title>发票详情</title>		
+{/block}
+{block name="style"}
+<style>
+.user-name{line-height:26px;}
+.user-ops{font-size:14px; color:#999;}
+</style>
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="mbui-user-panel margin-16-b">
+	<div class="avatar">
+		<img src="{$create_user.thumb|default=''}" alt="{$create_user.name|default=''}">
+	</div>
+	<div class="panel-info">
+		<div class="user-name">{$create_user.name|default=''}的发票</div>
+		<div class="user-ops">部门：{$create_user.department|default=''}，职称：{$create_user.position|default=''}</div>
+	</div>
+</div>
+<div class="mbui-group">
+	<div class="mbui-list">
+		<div class="mbui-list-bd">开票金额(元)</div>
+		<div class="mbui-list-ft">{$detail.amount}</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">开票类型</div>
+		<div class="mbui-list-ft">
+			{eq name="$detail.invoice_type" value="1"}增值税专用发票{/eq}
+			{eq name="$detail.invoice_type" value="2"}普通发票{/eq}
+			{eq name="$detail.invoice_type" value="3"}专业发票{/eq}
+		</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">开票主体</div>
+		<div class="mbui-list-ft">
+			{$detail.subject}
+		</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">抬头类型</div>
+		<div class="mbui-list-ft">
+			{eq name="$detail.types" value="1"}企业{/eq}
+			{eq name="$detail.types" value="2"}个人{/eq}
+		</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">开票抬头</div>
+		<div class="mbui-list-ft">
+			{$detail.invoice_title}
+		</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">电话号码</div>
+		<div class="mbui-list-ft">
+			{$detail.invoice_phone}
+		</div>
+    </div>
+	{eq name="$detail.types" value="1"}
+	<div class="mbui-list">
+		<div class="mbui-list-bd">纳税人识别号</div>
+		<div class="mbui-list-ft">
+			{$detail.invoice_tax}
+		</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">开户行</div>
+		<div class="mbui-list-ft">
+			{$detail.invoice_bank}
+		</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">银行账号</div>
+		<div class="mbui-list-ft">
+			{$detail.invoice_account}
+		</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">银行营业网点</div>
+		<div class="mbui-list-ft">
+			{$detail.invoice_banking}
+		</div>
+    </div>
+	<div class="mbui-list">
+		<div class="mbui-list-bd">地址</div>
+		<div class="mbui-list-ft">
+			{$detail.invoice_address}
+		</div>
+    </div>
+	{/eq}
+	{if condition="$detail.contract_id > 0"}
+	<div class="mbui-list">
+		<div class="mbui-list-bd">关联的合同</div>
+		<div class="mbui-list-ft">{$detail.contract_name}</div>
+    </div>
+	{/if}
+	{if condition="$detail.project_id > 0"}
+	<div class="mbui-list">
+		<div class="mbui-list-bd">关联项目</div>
+		<div class="mbui-list-ft">{$detail.project_name}</div>
+    </div>
+	{/if}
+	{notempty name="$detail.remark"}
+	<div class="mbui-list">
+		<div class="mbui-list-bd">备注信息</div>
+		<div class="mbui-list-ft">{$detail.remark}</div>
+    </div>
+	{/notempty}
+</div>
+{notempty name="$detail.file_array"}
+<div class="mbui-group-title">相关附件</div>
+<div class="bg-white">
+	<div class="mbui-file-list" style="padding:12px 12px 2px;">
+	{volist name="$detail.file_array" id="vo"}
+		{:file_item($vo,'view')}
+	{/volist}
+	</div>
+</div>
+{/notempty}
+
+<div id="checkBox" data-status="{$detail.check_status}" data-id="{$detail.id}" data-checkflowid="{$detail.check_flow_id}"></div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">			
+		const moduleInit = ['layer','fixedbar','oaCheck','fileupload'];
+		const id = {$detail.id};
+		function mbuiInit() {
+			let tool = mbui.tool,layer=mbui.layer,oaCheck=mbui.oaCheck;
+			//审批相关
+			oaCheck.init({
+				check_name:'invoice',
+				checking_btn:'<button class="mbui-btn bg-green link-a" data-href="/finance/invoice/add/id/'+id+'.html">编辑</button>'
+			});
+		}
+	</script>
+{/block}
+<!-- /脚本 -->

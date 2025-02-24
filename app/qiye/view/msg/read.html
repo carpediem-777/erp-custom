@@ -1,0 +1,96 @@
+{extend name="/base/mobile_base" /}
+{block name="title"}
+	<title>消息详情</title>
+{/block}
+{block name="style"}
+<style>
+.msg-detail h1{font-size:18px; padding:12px;}
+.msg-detail-ops{line-height:24px; font-size:13px; padding:0 12px 16px;}
+.detail-msg-content{font-size: 16px!important; line-height: 1.8; padding:12px; position:relative}
+.detail-msg-content:before {
+    content: " ";
+    -webkit-transform: scale(0.5);
+    transform: scale(0.5);
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 0;
+    border-top: 1px solid #E5E5E5;
+}
+.detail-msg-content img{width: 100%;}
+.file-tips{font-size:14px; padding:2px 5px; background:var(--color-gray-100); color:var(--color-blue-600); border-radius:4px; margin:4px 0;}
+.file-tips i{font-size:18px; margin-right:3px;}
+.msg-a{padding-left:24px; color:var(--color-blue-600); }
+.msg-tips{padding-left:30px;color:var(--color-blue-600); }
+.side-a{color:var(--color-blue-600)}
+</style>
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="msg-detail bg-white">
+	<h1>{$detail.title}</h1>
+	<div class="msg-detail-ops">
+		<p>
+			<span class="text-gray">消息类型：</span>
+			{eq name="$detail.message_id" value="0"}
+			<span class="text-green">系统消息</span>
+			{else/}
+			<span class="text-blue">个人消息</span>
+			{/eq}
+		</p>
+		<p><span class="text-gray">发送时间：</span> <span>{$detail.create_time|default=''}</span></p>
+		
+		{gt name="$detail.message_id" value="0"}
+			<p><span class="text-gray">发 送 人：</span> {$detail.from_uname}</p>
+			<p>
+				<span class="text-gray">收 件 人：</span>
+				{eq name="$message.types" value="1"}
+				<span>『同事』</span>{$message.unames|default=''}
+				{/eq}
+				{eq name="$message.types" value="2"}
+				<span>『部门』</span>{$message.dnames|default=''}
+				{/eq}
+				{eq name="$message.types" value="3"}
+				<span>『岗位』</span>{$message.pnames|default=''}
+				{/eq}
+			</p>
+			{notempty name="$message.copy_names"}
+			<p><span class="text-gray">抄 送 人：</span> {$message.copy_names}</p>
+			{/notempty}
+		{/gt}
+	</div>	
+		
+
+	<div class="detail-msg-content">
+		{$detail.content|default=''}{gt name="$detail.template" value="0"}{:get_message_mobile($detail.template,$detail.action_id)}{/gt}
+		{if condition="($detail.msg_id > 0)"}	
+			<div style="padding-bottom:8px;">
+				<fieldset style="border:1px solid #EBEBEB; background-color:#f8f8f8;"><legend>引用消息内容：</legend>
+				{$detail.from_content}{gt name="$detail.from_template" value="0"}{:get_message_mobile($detail.from_template,$detail.from_action_id)}{/gt}
+				{notempty name="$detail.from_file_array"}
+					<div class="file-tips"><i class="iconfont icon-fujian"></i>引用消息有附件，请到PC端查看。</div>
+				{/notempty}
+				</fieldset>
+			</div>
+		{/if}
+	
+		{notempty name="$detail.file_ids"}
+		<div class="file-tips"><i class="iconfont icon-fujian"></i>消息有附件，请到PC端查看。</div>
+		{/notempty}
+	</div>
+</div>
+{/block}
+<!-- 脚本 -->
+{block name="script"}
+	<script type="text/javascript">
+		const moduleInit = ['tool','fixedbar'];
+		function mbuiInit() {
+			let tool = mbui.tool;
+		}
+	</script>
+{/block}
+<!-- /脚本 -->

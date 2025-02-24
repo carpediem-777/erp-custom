@@ -1,0 +1,92 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>日程安排</title> 		
+{/block}
+
+{block name="style"}
+	<style type="text/css">
+	
+	</style>
+{/block}
+
+{block name="body"}
+<form class="mbui-form" id="formBox">
+	<div class="mbui-group-title" style="padding-top:12px">日程安排</div>
+	<div class="mbui-group">
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">开始时间<i>*</i></label>
+			<div class="mbui-form-select date-select">
+				<input class="mbui-form-input tool-time" readonly name="start_time" placeholder="请选择" value="" data-verify="required" data-type="datetime" data-errortips="请完善开始时间">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">结束时间<i>*</i></label>
+			<div class="mbui-form-select date-select">
+				<input class="mbui-form-input tool-time" readonly name="end_time" type="text" placeholder="请选择" value="" data-verify="required" data-type="datetime" data-errortips="请完善结束时间">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">提醒</label>
+			<div class="mbui-form-select">
+				<select name="remind_type">
+					<option value="0" selected>不提醒</option>
+					<option value="1">提前5分钟</option>
+					<option value="2">提前15分钟</option>
+					<option value="3">提前30分钟</option>
+					<option value="4">提前1小时</option>
+					<option value="5">提前2小时</option>
+					<option value="6">提前1天</option>
+				</select>
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">优先级</label>
+			<div class="mbui-form-select">
+				<select name="type">
+					<option value="1">紧急</option>
+					<option value="2">重要</option>
+					<option value="3">次要</option>
+					<option value="4">不重要</option>
+					<option value="5" selected>无优先级</option>
+				</select>
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">日程内容<i>*</i></label>
+			<textarea rows="3" name="title"  class="mbui-form-input" placeholder="请输入工作内容"  data-verify="required" data-errortips="请完善日程内容"></textarea>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">日程详细描述</label>
+			<textarea rows="5" name="remark"  class="mbui-form-input" placeholder="请输入日程详细描述"></textarea>
+		</div>
+	</div>
+	<div class="padding-16 center">
+		<input name="id" type="hidden" value="0">
+		<button class="mbui-btn mbui-btn-100" data-event="submit">提交保存</button>
+	</div>
+</form>
+	
+{/block}
+
+{block name="script"}	
+	<script type="text/javascript">			
+		const moduleInit = ['tool','form','layer','picker'];
+		function mbuiInit() {
+			let tool = mbui.tool,form= mbui.form,layer=mbui.layer;
+
+			form({
+				submit:function(data){
+					let callback = function (e) {
+						layer.msg(e.msg);
+						if (e.code == 0) {
+							tool.replace('/qiye/index/calendar',2000);
+						}
+					}
+					tool.post("/oa/plan/add", data, callback);
+					return false;
+				}
+			});		
+		}
+	</script>
+{/block}

@@ -1,0 +1,192 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>收票申请</title> 		
+{/block}
+
+{block name="style"}
+	<style type="text/css">
+
+	</style>
+{/block}
+
+{block name="body"}
+<form class="mbui-form" id="formBox">
+	<div class="mbui-group-title" style="padding-top:12px">收票申请</div>
+	<div class="mbui-group">
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">发票金额</label>
+			<input class="mbui-form-input" type="text" name="amount" placeholder="请输入" value="{$detail.amount|default=''}" data-verify="required|number" data-errortips="请完善发票金额,数字">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">发票号码</label>
+			<input class="mbui-form-input" type="text" name="code" placeholder="请输入" value="{$detail.code|default=''}" data-verify="required" data-errortips="请完善发票号码">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">发票类型</label>
+			<div class="mbui-form-select">
+				<select name="invoice_type" data-verify="required" data-errortips="请选择开票类型">
+					<option value="">请选择开票主体</option>
+					{empty name="$detail"}
+					<option value="1">增值税专用发票</option>
+					<option value="2">普通发票</option>
+					<option value="3">专业发票</option>
+					{else/}
+					<option value="1" {eq name="$detail.invoice_type" value="1"} selected{/eq}>增值税专用发票</option>
+					<option value="2" {eq name="$detail.invoice_type" value="2"} selected{/eq}>普通发票</option>
+					<option value="3" {eq name="$detail.invoice_type" value="3"} selected{/eq}>专业发票</option>
+					{/empty}
+				</select>
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">发票日期</label>
+			<div class="mbui-form-select date-select">
+				<input class="mbui-form-input tool-time" type="text" readonly name="open_time" placeholder="请选择" value="{$detail.open_time|default=''}" data-verify="required" data-errortips="请完善发票日期">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">发票抬头</label>
+			<div class="mbui-form-select">
+				<select name="invoice_subject" data-verify="required" data-errortips="请选择发票抬头">
+					<option value="">请选择发票抬头</option>
+					{empty name="$detail"}
+					{volist name=":get_base_data('enterprise')" id="vo"}
+					<option value="{$vo.id}">{$vo.title}</option>
+					{/volist}
+					{else/}
+					{volist name=":get_base_data('enterprise')" id="vo"}
+					<option value="{$vo.id}" {eq name="$detail.invoice_subject" value="$vo.id"} selected{/eq}>{$vo.title}</option>
+					{/volist}
+					{/empty}
+				</select>
+			</div>
+		</div>	
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">开票主体</label>
+			<div class="mbui-form-select">
+				<input class="mbui-form-input picker-oa" type="text" id="supplier_name" name="supplier_name" data-url="/contract/api/get_supplier" placeholder="请选择开票主体(供应商)" value="{$detail.supplier_name|default=''}" readonly data-verify="required" data-errortips="请完善开票主体">
+				<input type="hidden" id="supplier_id" name="supplier_id" value="{$detail.supplier_id|default=0}">	
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">付款类型</label>
+			<div class="mbui-form-select">
+				<select name="cash_type" data-verify="required" data-errortips="请选择付款类型">
+					<option value="">请选择付款类型</option>
+					{empty name="$detail"}
+					<option value="1">银行</option>
+					<option value="2">现金</option>
+					<option value="3">支付宝</option>
+					<option value="4">微信</option>
+					<option value="5">汇票</option>
+					<option value="6">支票</option>
+					<option value="7">托收</option>
+					<option value="8">其他</option>
+					{else/}
+					<option value="1" {eq name="$detail.cash_type" value="1"}selected{/eq}>银行</option>
+					<option value="2" {eq name="$detail.cash_type" value="2"}selected{/eq}>现金</option>
+					<option value="3" {eq name="$detail.cash_type" value="3"}selected{/eq}>支付宝</option>
+					<option value="4" {eq name="$detail.cash_type" value="4"}selected{/eq}>微信</option>
+					<option value="5" {eq name="$detail.cash_type" value="5"}selected{/eq}>汇票</option>
+					<option value="6" {eq name="$detail.cash_type" value="6"}selected{/eq}>支票</option>
+					<option value="7" {eq name="$detail.cash_type" value="7"}selected{/eq}>托收</option>
+					<option value="8" {eq name="$detail.cash_type" value="8"}selected{/eq}>其他</option>
+					{/empty}
+				</select>
+			</div>
+		</div>
+		<div class="mbui-form-line types-1">
+			<label class="mbui-form-label">银行类别</label>
+			<input class="mbui-form-input" type="text" name="invoice_banking" placeholder="请输入" value="{$detail.invoice_banking|default=''}">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">开户行</label>
+			<input class="mbui-form-input" type="text" name="invoice_bank" placeholder="请输入" value="{$detail.invoice_bank|default=''}">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">银行账号</label>
+			<input class="mbui-form-input" type="text" name="invoice_account" placeholder="请输入" value="{$detail.invoice_account|default=''}">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">关联采购合同</label>
+			<div class="mbui-form-select">
+				<input class="mbui-form-input picker-oa" type="text" id="purchase" name="purchase" data-url="/contract/api/get_purchase" data-field="name" placeholder="请选择" value="{$detail.purchase_name|default=''}" readonly>
+				<input type="hidden" name="purchase_id" value="{$detail.purchase_id|default=0}">	
+			</div>
+		</div>
+		
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">关联项目</label>
+			<div class="mbui-form-select">
+				<input class="mbui-form-input picker-oa" type="text" id="project" name="project" data-url="/project/api/get_project" placeholder="请选择" value="{$detail.project_name|default=''}" readonly>
+				<input type="hidden" name="project_id" value="{$detail.purchase_id|default=0}">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">备注信息</label>
+			<textarea rows="3" name="remark" class="mbui-form-input" placeholder="请输入">{$detail.remark|default=''}</textarea>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">相关附件</label>
+			<div class="mbui-form-uploader">
+				<div class="mbui-uploader-btn-border" id="uploadBtn"><i class="iconfont icon-shangchuan"></i></div>
+			</div>
+			<div id="uploadBox" class="mbui-file-list" style="padding:0 12px 2px;">
+				<input data-type="file" name="file_ids" type="hidden" value="{$detail.file_ids|default=''}">
+				{notempty name="$detail.file_array"}				
+				{volist name="$detail.file_array" id="vo"}
+					{:file_item($vo)}
+				{/volist}
+				{/notempty}
+			</div>
+		</div>
+	</div>
+	
+	<div id="checkBox" data-status="{$detail.check_status|default=0}" data-id="{$detail.id|default=0}" data-checkflowid="{$detail.check_flow_id|default=0}"></div>
+	
+	<div class="padding-16 center">
+		<input type="hidden" name="id" value="{$detail.id|default=0}">
+		<button class="mbui-btn mbui-btn-100" data-event="submit">保存并提交审核</button>
+	</div>
+</form>
+{/block}
+
+{block name="script"}	
+	<script type="text/javascript">	
+		const moduleInit = ['tool','form','layer','userPicker','fileupload','picker','oaCheck'];
+		function mbuiInit() {
+			let tool = mbui.tool,form= mbui.form,layer=mbui.layer,fileupload=mbui.fileupload,oaCheck=mbui.oaCheck,picker=mbui.picker;
+			
+			oaCheck.init({
+				check_name:'ticket',
+				check_btn:0
+			});			
+			//附件上传
+			fileupload();
+  
+			//表单提交
+			form({
+				submit:function(data){
+					let callback = function (e) {
+						layer.msg(e.msg);
+						if (e.code == 0) {
+							let checkCallback = function (e) {
+								//layer.msg(e.msg);
+								if (e.code == 0) {
+									tool.replace('/qiye/approve/mylist',2000);			
+								}
+							}
+							data.check_name = 'ticket';
+							data.action_id = e.data.return_id;
+							oaCheck.submit(data,checkCallback);
+						}
+					}
+					
+					tool.post("/finance/ticket/add", data, callback);
+					return false;
+				}
+			});
+		}
+	</script>
+{/block}

@@ -1,0 +1,81 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>工作汇报</title> 		
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="note-channel">
+    <div class="mbui-tab">
+        <ul class="mbui-tab-title">
+            <li {eq name="$send" value="1"} class="active" {/eq}>
+                <a class="link-a" href="javascript:;" data-href="/qiye/index/work?send=1">发送的汇报</a>
+            </li>
+            <li {eq name="$send" value="2"} class="active" {/eq}>
+                 <a class="link-a" href="javascript:;" data-href="/qiye/index/work?send=2">接收的汇报</a>
+            </li>
+        </ul>
+    </div>
+	<div id="listBox" class="load-data-list"></div>
+</div>
+<div class="mbui-new-add"><a href="javascript:;" title="新增汇报" data-event="menu"><i class="iconfont icon-addnew"></i></a></div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">			
+		const send = {$send};
+		const moduleInit = ['tool','loadData','layer'];
+		function mbuiInit() {
+			let tool = mbui.tool,loadData=mbui.loadData,layer=mbui.layer;
+			$('[data-event="menu"]').on('click',function(){
+				layer.open({
+					type:4,
+					content: '<a href="/qiye/index/work_add?types=1" class="actionsheet-btn border-bottom" data-dismiss="modal">新增日报</a>\
+							<a href="/qiye/index/work_add?types=2" class="actionsheet-btn border-bottom" data-dismiss="modal">新增周报</a>\
+							<a href="/qiye/index/work_add?types=3" class="actionsheet-btn border-bottom" data-dismiss="modal">新增月报</a>',
+					btn:['取消']
+				});
+			})
+			loadData({
+				url:'/oa/work/datalist',
+				where:{send:send},
+				template:function(data){
+					let status = '<span class="green">已发送</span>';
+					if(data.send_time==0){
+						html = '<span class="red">未发送</span>';
+					}
+					
+					let types='日报';
+					let range_data = data.start_date;
+					if(data.types==2){
+						types = '<span class="blue">周报</span>';
+						range_data = data.start_date+' 至 '+data.end_date;
+					}
+					else if(data.types==3){
+						types = '<span class="yellow">月报</span>';
+						range_data = data.start_date+' 至 '+data.end_date;
+					}
+					var listItem = '<a href="/oa/work/view/id/'+data.id+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="note-title f16">'+data.create_time+' 提交的'+types+'</dt>\
+									<dd class="note-desc f13"><span class="text-gray">发送状态：</span>'+status+'<span class="text-gray" style="margin-left:16px;">接收人：</span>'+data.to_names+'</dd>\
+									<dd class="note-desc f13"><span class="text-gray">汇报周期：</span>'+range_data+'</dd>\
+								</dl>\
+							</a>';
+					if(send==2){
+						listItem = '<a href="/oa/work/view/id/'+data.wid+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="note-title f16">'+data.send_time+' 提交的'+types+'</dt>\
+									<dd class="note-desc f13"><span class="text-gray">汇报人：</span>'+data.from_name+'<span class="text-gray" style="margin-left:16px;">接收人：</span>'+data.to_name+'</dd>\
+									<dd class="note-desc f13"><span class="text-gray">汇报周期：</span>'+range_data+'</dd>\
+								</dl>\
+							</a>';
+					}
+					return listItem;
+				}	
+			});
+		}
+	</script>
+{/block}

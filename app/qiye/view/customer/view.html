@@ -1,0 +1,277 @@
+{extend name="/base/mobile_base" /}
+{block name="title"}
+	<title>客户详细</title>		
+{/block}
+{block name="style"}
+<style>
+.customer-header h1{padding-bottom:8px;}
+</style>
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="padding-12 margin-12-b bg-white customer-header">
+	<h1>
+		<span id="edit_name" data-types="text" data-text="{$detail.name}">{$detail.name}</span>
+		{eq name="$detail.is_lock" value="1"}
+			<button type="button" class="mbui-btn mbui-btn-warm xs"><i class="iconfont icon-suozhu"></i></button>
+		{else/}
+			<button type="button" class="mbui-btn xs"><i class="iconfont icon-jiesuo"></i></button>
+		{/eq}
+	</h1>
+	<p><span class="text-gray f12">{$detail.admin_name}创建于{:time_trans($detail.create_time)}<span>{gt name="$detail.update_time" value="0"}，最近更新于{:time_trans($detail.update_time)}{/gt}</span></p>
+</div>
+<div class="mbui-tab margin-top" id="tabs">
+	<ul class="mbui-tab-title">
+		<li class="active"><a href="javascript:;">客户信息</a></li>
+		<li><a href="javascript:;">跟进记录</a></li>
+		<li><a href="javascript:;">线索机会</a></li>
+		<li><a href="javascript:;">联系人</a></li>
+	</ul>
+	<div class="mbui-tab-content">
+		<div class="mbui-tab-item mbui-tab-show">
+			<div class="mbui-group">		
+				{gt name="$detail.belong_uid" value="0"}
+				<div class="mbui-list">
+					<div class="mbui-list-bd">归属员工</div>
+					<div class="mbui-list-ft">{$detail.belong_name}</div>
+				</div>
+				<div class="mbui-list">
+					<div class="mbui-list-bd">归属部门</div>
+					<div class="mbui-list-ft">{$detail.belong_department}</div>
+				</div>
+				<div class="mbui-list">
+					<div class="mbui-list-bd">共享员工</div>
+					<div class="mbui-list-ft">{$detail.share_names|default="-"}</div>
+				</div>
+				{/gt}
+				<div class="mbui-list">
+					<div class="mbui-list-bd">客户等级</div>
+					<div class="mbui-list-ft" id="edit_customer_grade" data-types="picker" data-api="/customer/api/get_customer_grade">{$detail.grade}</div>
+				</div>
+				<div class="mbui-list">
+					<div class="mbui-list-bd">所属行业</div>
+					<div class="mbui-list-ft">{$detail.industry}</div>
+				</div>
+				<div class="mbui-list">
+					<div class="mbui-list-bd">客户来源</div>
+					<div class="mbui-list-ft" id="edit_cate_id">{$detail.source}</div>
+				</div>
+				<div class="mbui-list">
+					<div class="mbui-list-bd">客户状态</div>
+					<div class="mbui-list-ft" id="edit_customer_status" data-types="picker" data-api="/customer/api/get_customer_status">{$detail.customer_status_name}</div>
+				</div>
+				<div class="mbui-list">
+					<div class="mbui-list-bd">客户意向</div>
+					<div class="mbui-list-ft" id="edit_intent_status" data-types="picker" data-api="/customer/api/get_intent_status">{$detail.intent_status_name}</div>
+				</div>
+				<div class="mbui-list">
+					<div class="mbui-list-bd">联系地址</div>
+					<div class="mbui-list-ft" id="edit_address">{$detail.address}</div>
+				</div>			
+			</div>
+
+			{notempty name="$detail.content"}		
+			<div class="padding-12 margin-12-t bg-white f16">
+				<div><strong>客户介绍</strong></div>
+				<div class="padding-12-t">{$detail.content}</div>
+			</div>
+			{/notempty}
+			
+			{notempty name="$detail.market"}
+			<div class="padding-12 margin-12-t bg-white f16">
+				<div><strong>经营业务</strong></div>
+				<div class="padding-12-t">{$detail.market}</div>
+			</div>
+			{/notempty}
+			{notempty name="$detail.remark"}
+			<div class="padding-12 margin-12-t bg-white f16">
+				<div><strong class="f16">备注信息</strong></div>
+				<div class="padding-12-t">{$detail.remark}</div>
+			</div>
+			{/notempty}
+			
+			{notempty name="$detail.file_array"}
+			<div class="mbui-group-title">相关附件</div>
+			<div class="bg-white">
+				<div class="mbui-file-list" style="padding:12px 12px 2px;">
+				{volist name="$detail.file_array" id="vo"}
+					{:file_item($vo,'view')}
+				{/volist}
+				</div>
+			</div>
+			{/notempty}
+			<div style="height:12px"></div>
+		</div>
+		<div class="mbui-tab-item">
+			<div id="traceBox" class="load-data-list"></div>
+		</div>
+		<div class="mbui-tab-item">
+			<div id="chanceBox" class="load-data-list"></div>
+		</div>
+		<div class="mbui-tab-item">
+			<div id="contactBox" class="load-data-list"></div>
+		</div>
+	 </div>
+</div>
+
+{if ( $detail.delete_time == 0 ) AND ( $detail.discard_time == 0 ) }
+<div style="width:100%; height:60px"></div>
+<footer class="mbui-bar bar-fixed tool-bar" id="editBox">
+	<a href="/customer/contact/add?cid={$detail.id}" class="mbui-bar-item">
+        <span class="mbui-bar-icon"><i class="iconfont icon-lianxijilu"></i></span>
+        <span>联系人</span>
+    </a>
+	<a href="/customer/trace/add?cid={$detail.id}" class="mbui-bar-item">
+        <span class="mbui-bar-icon"><i class="iconfont icon-gongwenxinzeng"></i></span>
+        <span>跟进记录</span>
+    </a>
+	<a href="/customer/chance/add?cid={$detail.id}" class="mbui-bar-item">
+        <span class="mbui-bar-icon"><i class="iconfont icon-zhaopin"></i></span>
+        <span>机会线索</span>
+    </a>
+	{eq name="$detail.belong_uid" value="0"}
+		<span class="mbui-bar-item" id="get">
+			<span class="mbui-bar-icon"><i class="iconfont icon-jiaoshiguanli"></i></span>
+			<span>领取客户</span>
+		</span>
+	{else/}
+		{eq name="$detail.is_lock" value="0"}
+		<span class="mbui-bar-item" id="lock" data-lock="1">
+			<span class="mbui-bar-icon"><i class="iconfont icon-suozhu"></i></span>
+			<span>锁住</span>
+		</span>
+		{else/}
+		<span class="mbui-bar-item" id="lock" data-lock="0">
+			<span class="mbui-bar-icon"><i class="iconfont icon-jiesuo"></i></span>
+			<span>解锁</span>
+		</span>
+		{/eq}
+		<span class="mbui-bar-item click-edit" data-types="menu" data-array="task" data-role="{$role}">
+			<span class="mbui-bar-icon"><i class="iconfont icon-gongdanguanli"></i></span>
+			<span>编辑客户</span>
+		</span>
+	{/eq}
+</footer>
+{/if}
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}
+	<script type="text/javascript">			
+		const detail_id = {$detail.id};
+		const task_menu = [
+			{"field":"name","title":"编辑客户名称"},
+			{"field":"address","title":"联系地址"},
+			{"field":"customer_grade","title":"编辑客户等级"},
+			{"field":"customer_status","title":"编辑客户状态"},
+			{"field":"intent_status","title":"编辑客户意向"}
+		];
+		const moduleInit = ['layer','fixedbar','loadData','tab','oaEdit','fileupload'];
+		function mbuiInit() {
+			let tool = mbui.tool,loadData = mbui.loadData,layer = mbui.layer,tab = mbui.tab,oaEdit = mbui.oaEdit;
+			
+			//客户加锁
+			$('#lock').on('click',function () {
+				let is_lock=$(this).data('lock');
+				let tips = '确定要锁住该客户信息吗？锁住后该客户的基本信息不能编辑。';
+				if(is_lock==0){
+					tips = '确定要解锁该客户信息吗？';
+				}
+				layer.confirm(tips, function(index) {
+					let callback = function (e) {
+						layer.msg(e.msg);
+						if (e.code == 0) {	
+							tool.reload(1000);						
+						}
+					}
+					tool.post("/customer/api/customer_lock", {id: detail_id,is_lock:is_lock}, callback);
+					layer.close(index);
+				});
+			});
+			
+			$('#get').on('click',function () {
+				layer.confirm('确定要获取该客户?', function(index) {
+					let callback = function (e) {
+						layer.msg(e.msg);
+						if (e.code == 0) {	
+							tool.reload(1000);						
+						}
+					}
+					tool.post("/customer/index/to_get", {id: detail_id}, callback);
+					layer.close(index);
+				});
+			});
+			
+			//快捷编辑
+			oaEdit.init({
+				box:'editBox',
+				id:detail_id,
+				url: "/customer/customer/add",
+				menu:{
+					task:task_menu,
+				}
+			});
+			
+			tab({elem: '#tabs'});
+			
+			loadData({
+				url:'/customer/api/get_trace',
+				limit:100,
+				where:{cid:detail_id},
+				elem:'#traceBox',
+				template:function(data){
+					var listItem = '<a href="/customer/trace/view/id/'+data.id+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="f16">'+data.content+'</dt>\
+									<dd class="f13"><span class="load-data-span"><i>跟进人：</i>'+data.admin_name+'</span><span class="load-data-span"><i>跟进方式：</i>'+data.type_name+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>跟进时间：</i>'+data.follow_time+'</span><span class="load-data-span"><i>当前阶段：</i>'+data.stage_name+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>下次跟进时间：</i>'+data.next_time+'</span></dd>\
+								</dl>\
+							</a>';
+					return listItem;
+				}	
+			});
+			
+			loadData({
+				url:'/customer/api/get_chance',
+				limit:100,
+				where:{cid:detail_id},
+				elem:'#chanceBox',
+				template:function(data){
+					var listItem = '<a href="/customer/chance/view/id/'+data.id+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="f16">'+data.title+'</dt>\
+									<dd class="f13"><span class="load-data-span"><i>发现时间：</i>'+data.discovery_time+'</span><span class="load-data-span"><i>归属人：</i>'+data.belong_name+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>预计签单时间：</i>'+data.expected_time+'</span><span class="load-data-span"><i>预计签单金额：</i>'+data.expected_amount+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>当前阶段：</i>'+data.stage_name+'</span></dd>\
+								</dl>\
+							</a>';
+					return listItem;
+				}	
+			});
+			
+			loadData({
+				url:'/customer/api/get_contact',
+				elem:'#contactBox',
+				where:{cid:detail_id},
+				limit:100,
+				template:function(data){
+					let sex = '<i class="bg-blue" style="padding:2px 4px; border-radius:2px; font-size:12px; margin-left:12px;">男</i>';
+					if(data.sex==2){
+						sex = '<iclass="bg-green" style="padding:2px 4px; border-radius:2px; font-size:12px; margin-left:12px;">女</i>';
+					}
+					var listItem = '<a href="/customer/contact/view/id/'+data.id+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="f16">'+data.name+sex+'</dt>\
+									<dd class="f13"><span class="load-data-span"><i>手机号码：</i>'+data.mobile+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>电子邮箱：</i>'+data.email+'</span></dd>\
+								</dl>\
+							</a>';
+					return listItem;
+				}	
+			});
+		}
+	</script>
+{/block}
+<!-- /脚本 -->

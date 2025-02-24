@@ -1,0 +1,88 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>工作汇报</title> 		
+{/block}
+
+{block name="style"}
+	<style type="text/css">
+
+	</style>
+{/block}
+
+{block name="body"}
+<form class="mbui-form" id="formBox">
+	<div class="mbui-group-title" style="padding-top:12px">工作日报</div>
+	<div class="mbui-group">
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">接 收 人</label>
+			<input class="mbui-form-input picker-admin" type="text" placeholder="请选择" value="" readonly data-verify="required" data-errortips="请完善接收人">
+			<input type="hidden" name="to_uids" value="0">
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">汇报日期</label>
+			<div class="mbui-form-select date-select">
+				<input class="mbui-form-input tool-time" type="text" readonly name="start_date" placeholder="请选择" value="" data-verify="required" data-errortips="请完善汇报日期">
+			</div>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">今日工作</label>
+			<textarea rows="5" name="works" class="mbui-form-input" placeholder="请输入今日工作" data-verify="required" data-errortips="请完善今日工作"></textarea>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">明日计划</label>
+			<textarea rows="5" name="plans" class="mbui-form-input" placeholder="请输入明日计划"></textarea>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">其它事项	</label>
+			<textarea rows="5" name="remark"  class="mbui-form-input" placeholder="请输入其它事项"></textarea>
+		</div>
+		<div class="mbui-form-line">
+			<label class="mbui-form-label">相关附件</label>
+			<div class="mbui-form-uploader">
+				<div class="mbui-uploader-btn-border" id="uploadBtn"><i class="iconfont icon-shangchuan"></i></div>
+			</div>
+			<div id="uploadBox" class="mbui-file-list" style="padding:0 12px 2px;">
+				<input data-type="file" name="file_ids" type="hidden" value="{$detail.file_ids|default=''}">
+				{notempty name="$detail.file_array"}				
+				{volist name="$detail.file_array" id="vo"}
+					{:file_item($vo)}
+				{/volist}
+				{/notempty}
+			</div>
+		</div>
+	</div>
+	<div class="padding-16 center">
+		<input name="id" type="hidden" value="0">
+		<input name="types" type="hidden" value="{$types}">
+		<input name="send" type="hidden" value="1">
+		<button class="mbui-btn mbui-btn-100" data-event="submit">提交发送</button>
+	</div>
+</form>
+	
+{/block}
+
+{block name="script"}	
+	<script type="text/javascript">			
+		const moduleInit = ['tool','form','layer','userPicker','fileupload','picker'];
+		function mbuiInit() {
+			let tool = mbui.tool,form= mbui.form,layer=mbui.layer,fileupload=mbui.fileupload;
+			//附件上传
+			fileupload();
+  
+			//表单提交
+			form({
+				submit:function(data){
+					let callback = function (e) {
+						layer.msg(e.msg);
+						if (e.code == 0) {
+							tool.replace('/qiye/index/work',2000);
+						}
+					}
+					tool.post("/oa/work/add", data, callback);
+					return false;
+				}
+			});		
+		}
+	</script>
+{/block}

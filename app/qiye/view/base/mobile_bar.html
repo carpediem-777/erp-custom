@@ -1,0 +1,8 @@
+<footer class="mbui-bar bar-fixed">
+	{volist name="$mobile_bar" id="vo"}
+    <a href="{$vo.url}" class="mbui-bar-item {eq name='$vo.url' value='$mca'}active{/eq}">
+        <span class="mbui-bar-icon"><i class="iconfont {$vo.icon}"></i></span>
+        <span>{$vo.title}</span>
+    </a>
+	{/volist}
+</footer>

@@ -1,0 +1,69 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>工作台</title> 		
+{/block}
+
+{block name="style"}
+	<style type="text/css">
+		html,body {overflow:hidden;}
+		#root {position:absolute; top:0;left:0;right:0;bottom:0; overflow-y:auto;-webkit-overflow-scrolling: touch; overflow-scrolling: touch;}
+		.mobile-menu{padding:6px 12px;}
+		.mobile-menu-span{height:66px;}
+	</style>
+{/block}
+
+{block name="body"}
+<div style="padding:12px 12px 6px;">
+	<div class="mbui-flex-panel bg-white padding-12 radius-6">
+		<div class="mbui-flex-avatar">
+			<div class="mbui-flex-avatar-img"><img src="{$user.thumb}"></div>
+		</div>
+		<div class="mbui-flex-content">
+			<div class="mbui-flex-title">
+				{$user.name} <a href="/qiye/login/login_out" class="mbui-text-blue f12">『退出登录』</a>
+			</div>
+			<div class="mbui-flex-description">
+				<p><span class="mbui-text-grey">部门：</span>{$user.department}</p>
+				<p>
+					<span class="mbui-text-grey">岗位：</span>{$user.position}
+					<span class="check-status-color-{$user.type}">
+					{eq name="$user.type" value="1"}『正式员工』{/eq}
+					{eq name="$user.type" value="2"}『试用员工』{/eq}
+					{eq name="$user.type" value="3"}『实习员工』{/eq}
+					</span>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+{volist name="mobile_menu" id="v" offset="0"}
+{notempty name="$v.list"}
+<div class="mobile-menu">
+	<div class="mbui-grid grid-4 mbui-grid-bg">
+		<div class="mbui-grid-title">{$v.title}</div>
+		<div class="mbui-grid-box clearfix">
+			{volist name="$v.list" id="vo"}
+			<a href="{$vo.url}" class="mbui-grid-item">
+				<span class="mbui-grid-item-icon bg-{$vo.bgcolor}"><i class="iconfont {$vo.icon}"></i></span>
+				{$vo.title}
+			</a>
+			{/volist}
+		</div>
+	</div>
+</div>
+{/notempty}
+{/volist}	
+<div class="mobile-menu-span"></div>
+{/block}
+
+{block name="script"}	
+	{include file="base/mobile_bar" /}
+	<script type="text/javascript">			
+		const moduleInit = ['layer'];
+		function mbuiInit() {
+			let tool = mbui.tool,layer=mbui.layer;	
+		}
+	</script>
+{/block}

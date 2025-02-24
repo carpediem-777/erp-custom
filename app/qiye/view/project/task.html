@@ -1,0 +1,54 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>任务列表</title> 		
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="note-channel">
+    <div class="mbui-tab">
+        <ul class="mbui-tab-title">
+			<li {eq name="$tab" value="0"} class="active" {/eq}>
+                <a class="link-a" href="javascript:;" data-href="/qiye/project/task?tab=0">全部</a>
+            </li>
+            <li {eq name="$tab" value="1"} class="active" {/eq}>
+                <a class="link-a" href="javascript:;" data-href="/qiye/project/task?tab=1">进行中</a>
+            </li>
+            <li {eq name="$tab" value="2"} class="active" {/eq}>
+                 <a class="link-a" href="javascript:;" data-href="/qiye/project/task?tab=2">即将逾期</a>
+            </li>
+			<li {eq name="$tab" value="3"} class="active" {/eq}>
+                 <a class="link-a" href="javascript:;" data-href="/qiye/project/task?tab=3">已逾期</a>
+            </li>
+        </ul>
+    </div>
+	<div id="listBox" class="load-data-list"></div>
+</div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">			
+		const tab = {$tab};
+		const moduleInit = ['tool','loadData'];
+		function mbuiInit() {
+			let tool = mbui.tool,loadData=mbui.loadData;
+			loadData({
+				url:'/project/task/datalist',
+				where:{tab:tab},
+				template:function(data){
+					var listItem = '<a href="/project/task/view/id/'+data.id+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="f16">'+data.title+'</dt>\
+									<dd class="f13"><span class="load-data-span"><i>任务状态：</i>'+data.status_name+'</span><span class="load-data-span"><i>负责人：</i>'+data.director_name+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>预估工时：</i>'+data.plan_hours+'</span><span class="load-data-span"><i>预估结束日期：</i>'+data.end_time+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>任务类别：</i>'+data.cate_name+'</span><span class="load-data-span"><i>优先级：</i>'+data.priority_name+'</span></dd>\
+								</dl>\
+							</a>';
+					return listItem;
+				}	
+			});
+		}
+	</script>
+{/block}

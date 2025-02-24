@@ -1,0 +1,37 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>客户联系人</title> 		
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div id="listBox" class="load-data-list"></div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">
+		const moduleInit = ['tool','loadData'];
+		function mbuiInit() {
+			let tool = mbui.tool,loadData=mbui.loadData;
+			loadData({
+				url:'/customer/contact/datalist',
+				template:function(data){
+					let sex = '<i class="mbui-bg-blue" style="padding:2px 4px; border-radius:2px; font-size:12px; margin-left:12px;">男</i>';
+					if(data.sex==2){
+						sex = '<iclass="mbui-bg-green" style="padding:2px 4px; border-radius:2px; font-size:12px; margin-left:12px;">女</i>';
+					}
+					var listItem = '<a href="/customer/contact/view/id/'+data.id+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="f16">'+data.name+sex+'</dt>\
+									<dd class="f13"><span class="load-data-span"><i>手机号码：</i>'+data.mobile+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>电子邮箱：</i>'+data.email+'</span></dd>\
+								</dl>\
+							</a>';
+					return listItem;
+				}	
+			});
+		}
+	</script>
+{/block}

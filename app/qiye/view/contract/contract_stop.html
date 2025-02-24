@@ -1,0 +1,46 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>中止的销售合同</title> 		
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="mbui-tab">
+	<ul class="mbui-tab-title">
+		<li class="active">
+			<a class="link-a" href="javascript:;" data-href="/qiye/contract/contract_stop">销售合同</a>
+		</li>
+		<li>
+			<a class="link-a" href="javascript:;" data-href="/qiye/contract/purchase_stop">采购合同</a>
+		</li>
+	</ul>
+</div>
+<div id="listBox" class="load-data-list"></div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">
+		const tab = {$tab};
+		const moduleInit = ['tool','loadData'];
+		function mbuiInit() {
+			let tool = mbui.tool,loadData=mbui.loadData;
+			loadData({
+				url:'/contract/contract/stoplist',
+				where:{tab:tab},
+				template:function(data){
+					var listItem = '<a href="/contract/contract/view/id/'+data.id+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="f16">'+data.name+'</dt>\
+									<dd class="f13"><span class="load-data-span"><i>合同状态：</i>'+data.status_name+'</span><span class="load-data-span"><i>合同编号：</i>'+data.code+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>签 定 人：</i>'+data.sign_name+'</span><span class="load-data-span"><i>合同周期：</i>'+data.interval_time+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>签订日期：</i>'+data.sign_time+'</span><span class="load-data-span"><i>合同金额：</i>'+data.cost+'</span></dd>\
+								</dl>\
+							</a>';
+					return listItem;
+				}	
+			});
+		}
+	</script>
+{/block}

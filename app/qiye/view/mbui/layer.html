@@ -1,0 +1,174 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>登录 · Phoenix OA</title> 		
+{/block}
+
+{block name="style"}
+	<style type="text/css">
+		.main-wrapper{
+			padding:20px;
+		}
+		.main-wrapper div{
+			margin-bottom:6px;
+		}
+	</style>
+{/block}
+
+{block name="body"}
+	<div class="main-wrapper">
+		<div><button class="mbui-btn mbui-btn-100" data-event="msg">msg</button></div>
+		<div><button class="mbui-btn mbui-btn-100" data-event="success">success</button></div>
+		<div><button class="mbui-btn mbui-btn-100" data-event="warning">warning</button></div>
+		<div><button class="mbui-btn mbui-btn-100" data-event="error">error</button></div>
+		<div><button class="mbui-btn mbui-btn-100" data-event="loading">loading</button></div>
+		<div><button class="mbui-btn mbui-btn-100" data-event="alert">alert</button></div>
+		<div><button class="mbui-btn mbui-btn-100" data-event="confirm">confirm</button></div>
+		<div><button class="mbui-btn mbui-btn-100" data-event="prompt">prompt</button></div>
+		<div><button class="mbui-btn mbui-btn-100" data-event="textarea">textarea</button></div>
+		<div><button class="mbui-btn mbui-btn-100" data-event="open">open</button></div>
+		<div><button class="mbui-btn mbui-btn-100" data-event="menu">底部菜单</button></div>
+		<div><button class="mbui-btn mbui-btn-100" data-event="top">顶部内容</button></div>
+		<div><button class="mbui-btn mbui-btn-100" data-event="radio">顶部radio</button></div>
+		<div><button class="mbui-btn mbui-btn-100" data-event="checkbox">顶部checkbox</button></div>
+	</div>
+	
+{/block}
+
+{block name="script"}	
+	<script type="text/javascript">			
+		const moduleInit = ['tool','layer'];
+		function mbuiInit() {
+			let tool = mbui.tool,layer=mbui.layer;
+			$('[data-event="msg"]').on('click',function(){
+				layer.msg('msg轻提示');
+			})
+			
+			$('[data-event="success"]').on('click',function(){
+				layer.success('success轻提示');
+			})
+			
+			$('[data-event="warning"]').on('click',function(){
+				layer.warning('warning轻提示');
+			})
+			
+			$('[data-event="error"]').on('click',function(){
+				layer.error('error');
+			})
+			
+			$('[data-event="loading"]').on('click',function(){
+				layer.loading('加载中...');
+			})
+			
+			$('[data-event="alert"]').on('click',function(){
+				layer.alert('账号在别的设备上登录，你被迫下线！');
+			})
+			
+			$('[data-event="confirm"]').on('click',function(){
+				layer.confirm('确认要删除该数据？');
+			})
+			
+			$('[data-event="prompt"]').on('click',function(){
+				layer.prompt('请输入',function(val,index){				
+					if(val==''){
+						layer.error('请输入内容');
+					}
+				});
+			})
+			
+			$('[data-event="textarea"]').on('click',function(){
+				layer.textarea('请输入',function(val,index){				
+					if(val==''){
+						layer.error('请输入内容');
+					}
+				});
+			})
+
+			$('[data-event="open"]').on('click',function(){
+				layer.open({
+					title: '使用条款协议',
+					content: '<p>\
+						本协议适用于您使用苹果的各项服务（“服务”），通过这些服务，您可以购买、获取、许可、租赁或订阅媒体、app（“App”）和其他应用内服务（合称“内容”）。\
+					</p>\
+					<p>\
+						我们的服务如下：iTunes Store、App Store、iBooks Store、Apple Music和Apple News。您可以创建一个用于使用中国服务的账户，同时表示您指定了居住并纳税的国家（“居住国”），您可以在居住国获取并使用我们的服务。为了使用我们的服务，您需要具备兼容的硬件、软件（推荐使用最新版本，有时必须使用最新版本）和互联网访问能力（可能产生费用）。我们服务的性能可能受这些因素影响。\
+					</p>\
+					<p>\
+						您必须年满13周岁（或注册程序规定的居住国内的最低年龄）才能创建Apple ID和使用我们的服务。未满13岁的个人账户需要由家长或法定监护人为使用家庭共享功能而创建，或由获准教育机构创建。\
+					</p>\
+					<p>\
+						服务和部分App允许您以订阅方式购买内容（“付费订阅”）。在账户设置的“管理订阅”部分取消订阅之前，付费订阅自动续展。如果付费订阅价格上涨，我们将通知您，必要时在征得您的同意后才继续提供服务。在最新付费订阅开始前24小时之内，我们将通过您的支付方式收费。在从您的支付方式中扣除订阅费用前，部分付费订阅可提供免费试用。在我们收费前，如果您决定停止付费订阅，请在免费试用结束前取消订阅。\
+					</p>',
+					btn:['确定并同意'],
+					className:'modal-long'
+				});
+			})
+			
+			$('[data-event="menu"]').on('click',function(){
+				layer.open({
+					type:4,
+					content: '<a href="javascript:void(0);" class="actionsheet-btn" data-dismiss="modal">拍照</a>\
+							<a href="javascript:void(0);" class="actionsheet-btn" data-dismiss="modal">从手机相册选择</a>\
+							<a href="javascript:void(0);" class="actionsheet-btn" data-dismiss="modal">保存图片</a>',
+					btn:['取消']
+				});
+			})
+			$('[data-event="top"]').on('click',function(){
+				layer.open({
+					type:5,
+					content: '<div class="mbui-list"><div class="mbui-list-bd">执行员工</div><div class="mbui-list-ft">素还真</div></div>\
+							  <div class="mbui-list"><div class="mbui-list-bd">所在部门</div><div class="mbui-list-ft">董事会</div></div>\
+							  <div class="mbui-list"><div class="mbui-list-bd">工作类别</div><div class="mbui-list-ft">其他</div></div>\
+							  <div class="mbui-list"><div class="mbui-list-bd">时间范围</div><div class="mbui-list-ft line-limit-1">2024-10-04 09:00 至 09:30，共0.50工时</div></div>\
+							  <div class="mbui-section-title bg-blue">工作内容</div>\
+							  <div class="mbui-bg-white padding f16">文明体验，文明测试，做一个文明的人</div>',
+					btn:['关闭']
+				});
+			})	
+
+			$('[data-event="radio"]').on('click',function(){
+				layer.open({
+					type:5,
+					content: '<div class="mbui-layer-radio">\
+								<div class="mbui-radio-checkbox">\
+									<label for="list_radio1">案头工作<input class="mbui-radio" type="radio" name="layer_radio" value="1" id="list_radio1" /></label>\
+								</div>\
+								<div class="mbui-radio-checkbox">\
+									<label for="list_radio2">外勤工作<input class="mbui-radio" type="radio" name="layer_radio" value="2" id="list_radio2" /></label>\
+								</div>\
+							</div>',
+					btn:['确定','取消'],
+					yes:function(index){
+						alert($('input[name="layer_radio"]:checked').val());
+					}
+				});
+			})	
+			
+			$('[data-event="checkbox"]').on('click',function(){
+				layer.open({
+					type:5,
+					content: '<div class="mbui-layer-checkbox">\
+								<div class="mbui-radio-checkbox">\
+									<label for="list_checkbox1">勤奋<input class="mbui-checkbox" type="checkbox" name="layer_checkbox" value="1" id="list_checkbox1" /></label>\
+								</div>\
+								<div class="mbui-radio-checkbox">\
+									<label for="list_checkbox2">好学<input class="mbui-checkbox" type="checkbox" name="layer_checkbox" value="2" id="list_checkbox2" /></label>\
+								</div>\
+								<div class="mbui-radio-checkbox">\
+									<label for="list_checkbox3">聪明<input class="mbui-checkbox" type="checkbox" name="layer_checkbox" value="3" id="list_checkbox3" /></label>\
+								</div>\
+							</div>',
+					btn:['确定','取消'],
+					yes:function(index){
+						let checkedValues = $('input[name="layer_checkbox"]:checked').map(function(){
+							  return $(this).val();
+							}).get();
+						console.log(checkedValues);
+					}
+				});
+			})
+		}
+	</script>
+{/block}
+</body>  
+</html>

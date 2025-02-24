@@ -1,0 +1,58 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>有发票付款</title> 		
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="mbui-tab">
+	<ul class="mbui-tab-title">
+		<li class="active">
+			<a class="link-a" href="javascript:;" data-href="/qiye/finance/payment">有发票付款</a>
+		</li>
+		<li>
+			<a class="link-a" href="javascript:;" data-href="/qiye/finance/payment_a">无发票付款</a>
+		</li>
+	</ul>
+</div>
+<div id="listBox" class="load-data-list"></div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">
+		const moduleInit = ['tool','loadData'];
+		function mbuiInit() {
+			let tool = mbui.tool,loadData=mbui.loadData;
+			loadData({
+				url:'/qiye/finance/payment',
+				template:function(data){
+					let pay_status='';
+					if(data.check_status==2){
+						pay_status = '<span class="mbui-text-red">未付款</span>';
+						if(data.pay_status==1){
+							pay_status = '<span class="mbui-text-green">部分付款</span>';
+						}
+						else if(data.pay_status==2){
+							pay_status = '<span class="mbui-text-green">已付款</span>';
+						}
+					}
+					else{
+						pay_status='-';
+					}
+				
+					var listItem = '<a href="/finance/payment/view/id/'+data.id+'.html" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="f16">付款金额：'+data.pay_amount+'，发票金额：'+data.amount+'</dt>\
+									<dd class="f13"><span class="load-data-span"><i>付款状态：</i>'+pay_status+'</span><span class="load-data-span"><i>申请人：</i>'+data.admin_name+'</span><span class="load-data-span"><i>部门：</i>'+data.department+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>开票主体：</i>'+data.supplier_name+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>发票号码：</i>'+data.code+'</span></dd>\
+								</dl>\
+							</a>';
+					return listItem;
+				}	
+			});
+		}
+	</script>
+{/block}

@@ -1,0 +1,42 @@
+{extend name="/base/mobile_base" /}
+
+{block name="title"}
+	<title>{$module=='project'?'项目':'任务'}评论</title> 		
+{/block}
+<!-- 主体 -->
+{block name="body"}
+<div class="note-channel">
+	<div id="listBox" class="load-data-list"></div>
+</div>
+{/block}
+<!-- /主体 -->
+
+<!-- 脚本 -->
+{block name="script"}	
+	<script type="text/javascript">
+		const module = '{$module}';
+		const moduleInit = ['tool','loadData'];
+		function mbuiInit() {
+			let tool = mbui.tool,loadData=mbui.loadData;
+			loadData({
+				url:'/project/task/comment',
+				where:{module:module},
+				template:function(data){
+					let module_name='项目';
+					if(module=='task'){
+						module_name='任务';
+					}
+					var listItem = '<a href="javascript:;" class="border-bottom">\
+								<dl class="clearfix">\
+									<dt class="f16">'+data.content+'</dt>\
+									<dd class="f13"><span class="load-data-span"><i>评论时间：</i>'+data.create_time+'</span><span class="load-data-span"><i>评论人：</i>'+data.admin_name+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>关联'+module_name+'：</i>'+data.topic_name+'</span></dd>\
+									<dd class="f13"><span class="load-data-span"><i>关联人：</i>'+data.to_names+'</span></dd>\
+								</dl>\
+							</a>';
+					return listItem;
+				}	
+			});
+		}
+	</script>
+{/block}

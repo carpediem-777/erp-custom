@@ -1,0 +1,12 @@
+/.idea
+/.vscode
+/.gitee
+*.log
+*.env
+*.lock
+*.ini
+/runtime/*
+/public/storage/*
+/public/backup/*
+/app/crud/file/*
+.DS_Store
